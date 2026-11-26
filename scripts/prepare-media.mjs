@@ -1,20 +1,22 @@
 // Builds every generated asset once (run `pnpm media`); outputs are committed:
-// - public/projects/<slug>/: cover.jpg (grayscale, for the zoom gallery), cover-color.jpg, gallery-N.jpg
+// - public/projects/<slug>/: cover.<hash>.jpg (grayscale, for the zoom gallery), cover-color.<hash>.jpg, gallery-N.<hash>.jpg
 // - lib/content/media.json: sizes for the seed content
 // - public/grain.png: A6 grain tile (≤ 10 KB)
 // - public/hero-fallback-{dark,light}.avif: still frame of the hero shader (lite/still tiers, 404)
 // - components/artwork/contour-paths.json: A1 topographic contours (noise field + marching squares)
 // Raw owner media lives in projects/ (not committed).
-import { mkdir, writeFile, rm } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const root = new URL("../", import.meta.url);
 // Owner decision (2026-11-26): at most 8 gallery images per project/activity, listed explicitly.
 const GALLERY_MAX = 8;
-const COVER_W = 1600; // covers are scaled up in the zoom gallery
+const COVER_W = 2560; // covers are scaled to full screen (retina) in the zoom gallery and case hero
 const PHOTO_W = 1200; // gallery and activity photos
-const MAX_BYTES = 300_000;
+const MAX_BYTES = 300_000; // photos
+const COVER_MAX_BYTES = 700_000; // HD covers; next/image serves them as AVIF/WebP at the size each page needs
 const SOURCES = {
   tbxxpert: { dir: "tbxxpert", cover: "cover.png", gallery: ["tbxpert-1.jpeg", "tbxpert-2.jpeg", "tbxpert-3.jpeg", "tbxpert-4.jpeg"] },
   "ai-cv-screen": { dir: "ai-cv-screen", cover: "cover.png", gallery: [] },
@@ -28,11 +30,21 @@ const SOURCES = {
   chainfolio: { dir: "Chainfolio", cover: "Main.png", gallery: ["login.png", "Register.png"], cropTop: 50 },
 };
 
-/** JPEG at the highest quality ≤ `q` that stays under MAX_BYTES (drops 6 per try, floor 50). */
-async function jpeg(img, file, q) {
+/**
+ * Writes `<dir>/<name>.<hash>.jpg` at the highest quality ≤ `q` that stays under `max` bytes (drops 6 per try,
+ * floor 50). The file name carries a hash of its bytes, so a changed image is a new URL: neither the browser
+ * nor next/image's cache (keyed by URL) can keep serving the old one. Returns the sharp info plus `name`.
+ */
+async function jpeg(img, dir, name, q, max = MAX_BYTES) {
+  const tmp = fileURLToPath(new URL(`${name}.tmp.jpg`, dir));
   for (;;) {
-    const info = await img.clone().jpeg({ quality: q, mozjpeg: true }).toFile(file);
-    if (info.size <= MAX_BYTES || q <= 50) return info;
+    const info = await img.clone().jpeg({ quality: q, mozjpeg: true }).toFile(tmp);
+    if (info.size <= max || q <= 50) {
+      const hash = createHash("sha1").update(await readFile(tmp)).digest("hex").slice(0, 8);
+      const file = `${name}.${hash}.jpg`;
+      await rename(tmp, fileURLToPath(new URL(file, dir)));
+      return { ...info, name: file };
+    }
     q -= 6;
   }
 }
@@ -72,14 +84,14 @@ for (const [slug, src] of Object.entries(SOURCES)) {
   await mkdir(outDir, { recursive: true });
   const cover = (await open(fileURLToPath(new URL(src.cover, inDir)), src.cropTop)).resize({ width: COVER_W, withoutEnlargement: true });
   // Gallery tiles are scaled up to 9×, so grayscale is baked into the file (no CSS filter).
-  const grayInfo = await jpeg(cover.clone().grayscale(), fileURLToPath(new URL("cover.jpg", outDir)), 72);
-  await jpeg(cover, fileURLToPath(new URL("cover-color.jpg", outDir)), 76);
-  const entry = { cover: { src: `/projects/${slug}/cover.jpg`, color: `/projects/${slug}/cover-color.jpg`, width: grayInfo.width, height: grayInfo.height }, gallery: [] };
+  const gray = await jpeg(cover.clone().grayscale(), outDir, "cover", 80, COVER_MAX_BYTES);
+  const color = await jpeg(cover, outDir, "cover-color", 82, COVER_MAX_BYTES);
+  const entry = { cover: { src: `/projects/${slug}/${gray.name}`, color: `/projects/${slug}/${color.name}`, width: gray.width, height: gray.height }, gallery: [] };
   for (const [i, f] of src.gallery.slice(0, GALLERY_MAX).entries()) {
     const file = fileURLToPath(new URL(f, inDir));
     const img = (src.band ? sharp(file).extract(await contentBand(file)) : await open(file, src.cropTop)).resize({ width: PHOTO_W, withoutEnlargement: true });
-    const info = await jpeg(img, fileURLToPath(new URL(`gallery-${i + 1}.jpg`, outDir)), 76);
-    entry.gallery.push({ src: `/projects/${slug}/gallery-${i + 1}.jpg`, width: info.width, height: info.height });
+    const info = await jpeg(img, outDir, `gallery-${i + 1}`, 76);
+    entry.gallery.push({ src: `/projects/${slug}/${info.name}`, width: info.width, height: info.height });
   }
   media[slug] = entry;
 }
@@ -100,9 +112,9 @@ for (const [slug, files] of Object.entries(ACTIVITIES)) {
   activityMedia[slug] = [];
   for (const [i, f] of files.slice(0, GALLERY_MAX + 1).entries()) {
     const img = sharp(fileURLToPath(new URL(`activities/${f}`, root))).rotate().resize({ width: PHOTO_W, withoutEnlargement: true });
-    const info = await jpeg(img, fileURLToPath(new URL(`photo-${i + 1}.jpg`, outDir)), 78);
-    await jpeg(img.clone().grayscale(), fileURLToPath(new URL(`photo-${i + 1}-gray.jpg`, outDir)), 74);
-    activityMedia[slug].push({ src: `/activities/${slug}/photo-${i + 1}.jpg`, gray: `/activities/${slug}/photo-${i + 1}-gray.jpg`, width: info.width, height: info.height });
+    const info = await jpeg(img, outDir, `photo-${i + 1}`, 76);
+    const gray = await jpeg(img.clone().grayscale(), outDir, `photo-${i + 1}-gray`, 74);
+    activityMedia[slug].push({ src: `/activities/${slug}/${info.name}`, gray: `/activities/${slug}/${gray.name}`, width: info.width, height: info.height });
   }
 }
 await writeFile(new URL("lib/content/activity-media.json", root), JSON.stringify(activityMedia, null, 2) + "\n");

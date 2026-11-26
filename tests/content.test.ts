@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import en from "@/messages/en.json";
 import id from "@/messages/id.json";
 import { buildGalleryTiles, mediaSet, pick, resolveContent, resolveImage, rowRatio } from "@/lib/content/resolve";
+import media from "@/lib/content/media.json";
 import { seed } from "@/lib/content/seed";
 import { splitAccent, stripAccent } from "@/lib/content/text";
 import { GLYPHS } from "@/lib/content/types";
@@ -85,10 +86,17 @@ describe("seed", () => {
       "basketball",
     ]);
   });
-  it("keeps every generated image under 300 KB", () => {
+  it("keeps every generated photo under 300 KB and every cover under 700 KB", () => {
     const walk = (d: string): string[] => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
-    const big = [...walk("public/projects"), ...walk("public/activities")].filter((f) => /\.(jpe?g|png)$/i.test(f) && statSync(f).size > 300_000);
-    expect(big).toEqual([]);
+    const images = [...walk("public/projects"), ...walk("public/activities")].filter((f) => /\.(jpe?g|png)$/i.test(f));
+    const isCover = (f: string) => /\/cover(-color)?\.[0-9a-f]{8}\.jpg$/.test(f);
+    expect(images.filter((f) => !isCover(f) && statSync(f).size > 300_000)).toEqual([]);
+    expect(images.filter((f) => isCover(f) && statSync(f).size > 700_000)).toEqual([]);
+  });
+  it("serves covers at the source's own resolution, up to 2560 px (HD on retina)", () => {
+    // Native widths of the raw owner files (projects/, not committed); a cover is never downscaled below min(native, 2560).
+    const native = { tbxxpert: 2400, "ai-cv-screen": 2818, inofa: 1801, "bloomarie-store": 2397, siakad: 2862, shardfall: 1562, chainfolio: 3360 } as const;
+    for (const [slug, width] of Object.entries(native)) expect(media[slug as keyof typeof media].cover.width, slug).toBeGreaterThanOrEqual(Math.min(width, 2560) - 1);
   });
   it("has no hero label by default", () => expect(resolveContent(seed, "en").settings.heroLabel).toBe(""));
   it("gives every project a case study", () => expect(content.projects.every((p) => p.problem && p.decisions.length > 0)).toBe(true));

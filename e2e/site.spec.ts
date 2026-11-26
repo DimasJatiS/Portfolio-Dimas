@@ -169,3 +169,43 @@ test("a row closing above keeps the tapped row in place (no scroll anchoring, as
   const after = (await row.boundingBox())!.y;
   expect(Math.abs(after - before)).toBeLessThan(4);
 });
+
+test("hover preview keeps the cover's own ratio and goes away when the page scrolls", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the preview only exists on fine pointers");
+  await page.goto("/?motion=lite");
+  const row = page.locator("li:has(> a[href$='/work/shardfall'])");
+  const preview = page.locator("[data-follower]");
+  // The preview (rightly) hides on every scroll, and lazy images shifting the layout can scroll the page
+  // while it loads: re-enter the row until the page is still.
+  await expect(async () => {
+    await page.mouse.move(2, 2);
+    await row.scrollIntoViewIfNeeded();
+    await row.hover();
+    await expect(preview).toHaveCSS("opacity", "1", { timeout: 2500 });
+  }).toPass({ timeout: 40_000 });
+  // Shardfall's cover is 1562×1600: it must not be cropped into a landscape box.
+  const ratio = await preview.evaluate((el) => (el as HTMLElement).offsetWidth / (el as HTMLElement).offsetHeight);
+  expect(Math.abs(ratio - 1562 / 1600)).toBeLessThan(0.03);
+  // Fast scrolling moves the row away without any pointer event: the preview must still hide.
+  await page.evaluate(() => window.dispatchEvent(new Event("scroll")));
+  await expect(preview).toHaveCSS("opacity", "0");
+});
+
+test("featured covers and timeline photos are never cropped", async ({ page }) => {
+  await page.goto("/?motion=still");
+  const check = async (selector: string) => {
+    const imgs = page.locator(selector);
+    const n = await imgs.count();
+    expect(n, selector).toBeGreaterThan(0);
+    for (let i = 0; i < n; i++) {
+      const img = imgs.nth(i);
+      await img.scrollIntoViewIfNeeded();
+      const [w, h] = await Promise.all([img.getAttribute("width"), img.getAttribute("height")]);
+      expect(w && h, `${selector} #${i} needs width/height`).toBeTruthy();
+      const box = (await img.boundingBox())!;
+      expect(Math.abs(box.width / box.height - Number(w) / Number(h)), `${selector} #${i}`).toBeLessThan(0.03);
+    }
+  };
+  await check("#work article[data-card] img[data-cover]");
+  await check("#experience img[data-photo]");
+});

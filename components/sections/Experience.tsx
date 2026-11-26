@@ -181,10 +181,11 @@ export function Experience({ label, items }: Props) {
                     <div className="pt-4">
                       {a.summary && <p className="max-w-[60ch] text-muted">{a.summary}</p>}
                       {seen.has(a.slug) && photos.length > 0 && (
-                        <ul className="mt-5 grid max-w-[504px] grid-cols-3 gap-3">
+                        // Fixed height, width from each photo's own ratio: portrait photos are never cropped.
+                        <ul className="mt-5 flex flex-wrap items-end gap-3">
                           {photos.map((img) => (
-                            <li key={img.src} className="media relative aspect-[4/3] overflow-hidden rounded-lg">
-                              <Image src={img.src} alt={img.alt} fill sizes="(min-width: 640px) 160px, 30vw" className="object-cover grayscale transition-[filter] duration-500 hover:grayscale-0" />
+                            <li key={img.src} className="media overflow-hidden rounded-lg">
+                              <Image data-photo src={img.src} alt={img.alt} width={img.width} height={img.height} sizes="240px" className="block h-28 w-auto max-w-full grayscale transition-[filter] duration-500 hover:grayscale-0 sm:h-40" />
                             </li>
                           ))}
                         </ul>

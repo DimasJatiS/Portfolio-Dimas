@@ -1,29 +1,29 @@
 {
   "tbxxpert": {
     "cover": {
-      "src": "/projects/tbxxpert/cover.jpg",
-      "color": "/projects/tbxxpert/cover-color.jpg",
-      "width": 1600,
-      "height": 1000
+      "src": "/projects/tbxxpert/cover.84de9b44.jpg",
+      "color": "/projects/tbxxpert/cover-color.5f50c16e.jpg",
+      "width": 2400,
+      "height": 1500
     },
     "gallery": [
       {
-        "src": "/projects/tbxxpert/gallery-1.jpg",
+        "src": "/projects/tbxxpert/gallery-1.da5c9ca6.jpg",
         "width": 576,
         "height": 1280
       },
       {
-        "src": "/projects/tbxxpert/gallery-2.jpg",
+        "src": "/projects/tbxxpert/gallery-2.dc371091.jpg",
         "width": 576,
         "height": 1280
       },
       {
-        "src": "/projects/tbxxpert/gallery-3.jpg",
+        "src": "/projects/tbxxpert/gallery-3.807a5a3f.jpg",
         "width": 576,
         "height": 1280
       },
       {
-        "src": "/projects/tbxxpert/gallery-4.jpg",
+        "src": "/projects/tbxxpert/gallery-4.96c11467.jpg",
         "width": 576,
         "height": 1280
       }
@@ -31,58 +31,58 @@
   },
   "ai-cv-screen": {
     "cover": {
-      "src": "/projects/ai-cv-screen/cover.jpg",
-      "color": "/projects/ai-cv-screen/cover-color.jpg",
-      "width": 1600,
-      "height": 914
+      "src": "/projects/ai-cv-screen/cover.513155ce.jpg",
+      "color": "/projects/ai-cv-screen/cover-color.b930ec88.jpg",
+      "width": 2560,
+      "height": 1463
     },
     "gallery": []
   },
   "inofa": {
     "cover": {
-      "src": "/projects/inofa/cover.jpg",
-      "color": "/projects/inofa/cover-color.jpg",
-      "width": 1600,
-      "height": 1459
+      "src": "/projects/inofa/cover.8666d911.jpg",
+      "color": "/projects/inofa/cover-color.51fc0e05.jpg",
+      "width": 1801,
+      "height": 1642
     },
     "gallery": [
       {
-        "src": "/projects/inofa/gallery-1.jpg",
+        "src": "/projects/inofa/gallery-1.bf6709e9.jpg",
         "width": 1200,
         "height": 616
       },
       {
-        "src": "/projects/inofa/gallery-2.jpg",
+        "src": "/projects/inofa/gallery-2.6c9315e4.jpg",
         "width": 667,
         "height": 1600
       },
       {
-        "src": "/projects/inofa/gallery-3.jpg",
+        "src": "/projects/inofa/gallery-3.bc453f30.jpg",
         "width": 1200,
         "height": 1108
       },
       {
-        "src": "/projects/inofa/gallery-4.jpg",
+        "src": "/projects/inofa/gallery-4.814862bc.jpg",
         "width": 1200,
         "height": 655
       },
       {
-        "src": "/projects/inofa/gallery-5.jpg",
+        "src": "/projects/inofa/gallery-5.cdd88851.jpg",
         "width": 1200,
         "height": 1091
       },
       {
-        "src": "/projects/inofa/gallery-6.jpg",
+        "src": "/projects/inofa/gallery-6.ccf15de9.jpg",
         "width": 1200,
         "height": 833
       },
       {
-        "src": "/projects/inofa/gallery-7.jpg",
+        "src": "/projects/inofa/gallery-7.5de490a6.jpg",
         "width": 1200,
         "height": 569
       },
       {
-        "src": "/projects/inofa/gallery-8.jpg",
+        "src": "/projects/inofa/gallery-8.850b4e70.jpg",
         "width": 1200,
         "height": 979
       }
@@ -90,24 +90,24 @@
   },
   "bloomarie-store": {
     "cover": {
-      "src": "/projects/bloomarie-store/cover.jpg",
-      "color": "/projects/bloomarie-store/cover-color.jpg",
-      "width": 1600,
-      "height": 1127
+      "src": "/projects/bloomarie-store/cover.4a35ba3a.jpg",
+      "color": "/projects/bloomarie-store/cover-color.75aaefca.jpg",
+      "width": 2397,
+      "height": 1689
     },
     "gallery": [
       {
-        "src": "/projects/bloomarie-store/gallery-1.jpg",
+        "src": "/projects/bloomarie-store/gallery-1.b634321c.jpg",
         "width": 1200,
         "height": 746
       },
       {
-        "src": "/projects/bloomarie-store/gallery-2.jpg",
+        "src": "/projects/bloomarie-store/gallery-2.4c29db1d.jpg",
         "width": 1200,
         "height": 1143
       },
       {
-        "src": "/projects/bloomarie-store/gallery-3.jpg",
+        "src": "/projects/bloomarie-store/gallery-3.a28815c0.jpg",
         "width": 329,
         "height": 740
       }
@@ -115,24 +115,24 @@
   },
   "siakad": {
     "cover": {
-      "src": "/projects/siakad/cover.jpg",
-      "color": "/projects/siakad/cover-color.jpg",
-      "width": 1600,
-      "height": 887
+      "src": "/projects/siakad/cover.9dc5035b.jpg",
+      "color": "/projects/siakad/cover-color.e3ba4ccc.jpg",
+      "width": 2560,
+      "height": 1420
     },
     "gallery": [
       {
-        "src": "/projects/siakad/gallery-1.jpg",
+        "src": "/projects/siakad/gallery-1.bb62e692.jpg",
         "width": 1200,
         "height": 639
       },
       {
-        "src": "/projects/siakad/gallery-2.jpg",
+        "src": "/projects/siakad/gallery-2.78642340.jpg",
         "width": 1200,
         "height": 662
       },
       {
-        "src": "/projects/siakad/gallery-3.jpg",
+        "src": "/projects/siakad/gallery-3.467b57bf.jpg",
         "width": 1200,
         "height": 665
       }
@@ -140,24 +140,24 @@
   },
   "shardfall": {
     "cover": {
-      "src": "/projects/shardfall/cover.jpg",
-      "color": "/projects/shardfall/cover-color.jpg",
+      "src": "/projects/shardfall/cover.a2617e60.jpg",
+      "color": "/projects/shardfall/cover-color.9691dad2.jpg",
       "width": 1562,
       "height": 1600
     },
     "gallery": [
       {
-        "src": "/projects/shardfall/gallery-1.jpg",
+        "src": "/projects/shardfall/gallery-1.34c59039.jpg",
         "width": 576,
         "height": 284
       },
       {
-        "src": "/projects/shardfall/gallery-2.jpg",
+        "src": "/projects/shardfall/gallery-2.ea16c3df.jpg",
         "width": 576,
         "height": 253
       },
       {
-        "src": "/projects/shardfall/gallery-3.jpg",
+        "src": "/projects/shardfall/gallery-3.387ecba5.jpg",
         "width": 576,
         "height": 285
       }
@@ -165,19 +165,19 @@
   },
   "chainfolio": {
     "cover": {
-      "src": "/projects/chainfolio/cover.jpg",
-      "color": "/projects/chainfolio/cover-color.jpg",
-      "width": 1600,
-      "height": 976
+      "src": "/projects/chainfolio/cover.a794c580.jpg",
+      "color": "/projects/chainfolio/cover-color.02a2ba76.jpg",
+      "width": 2560,
+      "height": 1562
     },
     "gallery": [
       {
-        "src": "/projects/chainfolio/gallery-1.jpg",
+        "src": "/projects/chainfolio/gallery-1.d853b680.jpg",
         "width": 1200,
         "height": 732
       },
       {
-        "src": "/projects/chainfolio/gallery-2.jpg",
+        "src": "/projects/chainfolio/gallery-2.d24582bf.jpg",
         "width": 1200,
         "height": 732
       }
