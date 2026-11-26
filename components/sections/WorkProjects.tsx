@@ -122,7 +122,7 @@ export function OtherWork({ projects }: { projects: Project[] }) {
           const row = (
             <>
               <span className="font-display text-[clamp(32px,4.4vw,64px)] leading-tight font-bold tracking-[-0.02em]">{p.title}</span>
-              <span className="hidden max-w-[36ch] text-sm text-muted lg:block">{p.summary}</span>
+              <span className="hidden max-w-[36ch] text-base text-muted lg:block">{p.summary}</span>
               <span className="label ml-auto flex items-center gap-4 text-muted">
                 {p.year}
                 <span aria-hidden>→</span>

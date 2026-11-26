@@ -31,9 +31,10 @@
 :root:not([data-theme]) {
   --surface: var(--black);
   --fg: var(--white);
-  --fg-muted: #a3a3a3;
+  --fg-muted: #bdbdb8;
   --accent: #cd7f32;
   --line: rgb(245 245 242 / 0.12);
+  --grid-line: rgb(245 245 242 / 0.06);
   --on-accent: var(--black);
   color-scheme: dark;
 }
@@ -44,9 +45,10 @@
 :root[data-theme="night"] [data-tone="inverse"] {
   --surface: var(--white);
   --fg: var(--black);
-  --fg-muted: #5c5c5c;
+  --fg-muted: #454545;
   --accent: #9a6230;
   --line: rgb(10 10 10 / 0.12);
+  --grid-line: rgb(10 10 10 / 0.06);
   --on-accent: var(--white);
   color-scheme: light;
 }
@@ -71,10 +73,20 @@ html.lenis body {
 
 body {
   font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 17px;
+  line-height: 1.65;
+  /* Manrope is variable: 450 keeps light-on-dark copy from rendering thin. */
+  font-weight: 450;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+}
+@media (min-width: 64rem) {
+  body {
+    font-size: 18px;
+  }
+}
+p {
+  text-wrap: pretty;
 }
 
 ::selection {
@@ -114,9 +126,9 @@ html.theme-transition .theme-icon * {
 
   .label {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
-    letter-spacing: -0.005em;
+    letter-spacing: 0;
     line-height: 1.4;
   }
 
@@ -125,6 +137,7 @@ html.theme-transition .theme-icon * {
     font-weight: 700;
     letter-spacing: -0.035em;
     line-height: 1;
+    text-wrap: balance;
   }
 
   .accent-word {
@@ -142,7 +155,7 @@ html.theme-transition .theme-icon * {
     border-radius: 999px;
     padding: 0.7em 1.25em;
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 1;
     white-space: nowrap;
@@ -171,7 +184,7 @@ html.theme-transition .theme-icon * {
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 0.55em 1em;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 1.2;
   }
@@ -249,9 +262,9 @@ html.theme-transition .theme-icon * {
 }
 .grid-lines > div {
   height: 100%;
-  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+  background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px);
   background-size: 25% 100%;
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--grid-line);
 }
 
 /* M-09 panel plate: transform only; still tier keeps a full plate without radius. */

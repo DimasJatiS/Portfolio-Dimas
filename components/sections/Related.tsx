@@ -135,7 +135,7 @@ export function Related({ items, start }: { items: RelatedItem[]; start: number 
                   }`}
                 >
                   <Media item={item} sizes="300px" />
-                  <span className="label absolute top-3 left-3 text-left text-[11px] text-white mix-blend-difference">{item.title}</span>
+                  <span className="label absolute top-3 left-3 text-left text-[13px] text-white mix-blend-difference">{item.title}</span>
                 </button>
               </li>
             ))}
