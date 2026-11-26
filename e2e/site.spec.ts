@@ -143,3 +143,29 @@ test("timeline accordion keeps later sections reachable", async ({ page }) => {
   await page.locator("#contact").scrollIntoViewIfNeeded();
   await expect(page.locator("#contact")).toBeInViewport();
 });
+
+test("the cursor disc stays off an open timeline panel", async ({ page, isMobile }) => {
+  test.skip(isMobile, "the disc only exists on fine pointers");
+  await page.goto("/?motion=still");
+  const disc = page.locator("[data-disc]");
+  // Wait for hydration: the disc starts at scale(0) once its handlers are attached.
+  await expect.poll(() => disc.evaluate((el) => el.style.transform)).toContain("scale(0");
+  const panel = page.locator(`#${await page.locator("#experience button[aria-expanded]").first().getAttribute("aria-controls")}`);
+  await panel.getByRole("link").hover();
+  await page.waitForTimeout(400);
+  const scale = await disc.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
+  expect(scale).toBe(0);
+});
+
+test("a row closing above keeps the tapped row in place (no scroll anchoring, as in Safari)", async ({ page }) => {
+  await page.goto("/?motion=still");
+  await page.addStyleTag({ content: "html, body { overflow-anchor: none !important; }" });
+  const row = page.locator("#experience button[aria-expanded]").nth(4);
+  await row.evaluate((el) => el.scrollIntoView({ block: "center" }));
+  await page.waitForTimeout(300);
+  const before = (await row.boundingBox())!.y;
+  await row.click();
+  await page.waitForTimeout(800);
+  const after = (await row.boundingBox())!.y;
+  expect(Math.abs(after - before)).toBeLessThan(4);
+});

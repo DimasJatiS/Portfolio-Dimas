@@ -23,8 +23,11 @@ export function Experience({ label, items }: Props) {
   const [open, setOpen] = useState<string | null>(items[0]?.slug ?? null);
   const [seen, setSeen] = useState<ReadonlySet<string>>(() => new Set(items[0] ? [items[0].slug] : []));
   const mounted = useRef(false);
+  // The tapped row's top before a toggle: a row closing above it must not push it away.
+  const anchor = useRef<{ el: HTMLElement; top: number } | null>(null);
 
-  const toggle = (slug: string) => {
+  const toggle = (slug: string, el: HTMLElement) => {
+    anchor.current = { el, top: el.getBoundingClientRect().top };
     const next = open === slug ? null : slug;
     setOpen(next);
     if (next && !seen.has(next)) setSeen(new Set(seen).add(next));
@@ -36,8 +39,24 @@ export function Experience({ label, items }: Props) {
       mounted.current = true;
       return;
     }
-    const id = setTimeout(() => ScrollTrigger.refresh(), getTier() === "still" ? 0 : 550);
-    return () => clearTimeout(id);
+    const ms = getTier() === "still" ? 0 : 550;
+    // Manual scroll anchoring for the whole slide (Safari has no overflow-anchor); a no-op where the browser already anchors.
+    const a = anchor.current;
+    const end = performance.now() + ms;
+    let raf = 0;
+    const hold = () => {
+      if (a) {
+        const dy = a.el.getBoundingClientRect().top - a.top;
+        if (Math.abs(dy) > 0.5) window.scrollBy(0, dy);
+      }
+      if (performance.now() < end) raf = requestAnimationFrame(hold);
+    };
+    hold();
+    const id = setTimeout(() => ScrollTrigger.refresh(), ms);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(id);
+    };
   }, [open]);
 
   useGSAP(
@@ -80,7 +99,9 @@ export function Experience({ label, items }: Props) {
         const r = list.getBoundingClientRect();
         const x = e.clientX - r.left;
         const y = e.clientY - r.top;
-        const hit = Boolean((e.target as Element).closest("[data-row]"));
+        // Not over an open panel: the disc would sit above its text and link without inverting them.
+        const target = e.target as Element;
+        const hit = Boolean(target.closest("[data-row]")) && !target.closest('[role="region"]');
         // Entering a row: start at the pointer instead of flying in from the last spot.
         if (hit && !on) {
           qx(x, x);
@@ -136,7 +157,7 @@ export function Experience({ label, items }: Props) {
                     id={btn}
                     aria-expanded={isOpen}
                     aria-controls={panel}
-                    onClick={() => toggle(a.slug)}
+                    onClick={(e) => toggle(a.slug, e.currentTarget)}
                     className="flex w-full items-start justify-between gap-6 text-left before:absolute before:inset-0 before:content-[''] [@media(hover:hover)_and_(pointer:fine)]:cursor-none"
                   >
                     <span>
@@ -154,7 +175,7 @@ export function Experience({ label, items }: Props) {
                   aria-labelledby={btn}
                   inert={!isOpen}
                   data-open={isOpen || undefined}
-                  className="relative z-10 grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[var(--ease-out)] data-[open]:grid-rows-[1fr] in-data-[motion=still]:duration-0"
+                  className="relative z-10 grid cursor-auto grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[var(--ease-out)] data-[open]:grid-rows-[1fr] in-data-[motion=still]:duration-0"
                 >
                   <div className="overflow-hidden">
                     <div className="pt-4">
