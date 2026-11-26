@@ -101,3 +101,12 @@ test("featured cards keep their actions inside the viewport while pinned", async
     expect(box.height).toBeGreaterThanOrEqual(44);
   }
 });
+
+test("related work shows animated glyphs, not photos", async ({ page }) => {
+  await page.goto("/work/siakad?motion=still");
+  const cards = page.locator("[data-card]");
+  expect(await cards.count()).toBeGreaterThan(3);
+  await expect(cards.locator("img")).toHaveCount(0);
+  await expect(cards.first().locator("svg.glyph")).toHaveCount(1);
+  await expect(page.locator("[data-zoom] img")).toHaveCount(0);
+});

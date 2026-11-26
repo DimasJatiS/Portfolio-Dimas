@@ -3,20 +3,18 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Glyph } from "@/components/artwork/Glyph";
-import { MediaFrame } from "@/components/ui/MediaFrame";
 import { Link, useRouter } from "@/i18n/navigation";
-import type { GlyphId, Img } from "@/lib/content/types";
+import type { GlyphId } from "@/lib/content/types";
 import { gsap, getTier, SCRUB, useGSAP } from "@/lib/motion/gsap";
 
 /** One stop of the site-wide sequence (lib/content/sequence.ts). */
-export type RelatedItem = { key: string; href: string; title: string; label: string; images: Img[]; glyph: GlyphId };
+export type RelatedItem = { key: string; href: string; title: string; label: string; glyph: GlyphId };
 
-function Media({ item, color = false, sizes }: { item: RelatedItem; color?: boolean; sizes: string }) {
-  return item.images.length > 0 ? (
-    <MediaFrame images={item.images} color={color} sizes={sizes} />
-  ) : (
+/** Animated glyph tile: no photos in this strip, so it costs no image requests. */
+function Media({ item, active = false, zoom = false }: { item: RelatedItem; active?: boolean; zoom?: boolean }) {
+  return (
     <span className="grid size-full place-items-center bg-[color-mix(in_srgb,var(--fg)_6%,var(--surface))]">
-      <Glyph glyph={item.glyph} animate className="size-1/3 text-muted" />
+      <Glyph glyph={item.glyph} animate variant="halftone" className={`${zoom ? "size-[min(40vh,50vw)]" : "size-1/2"} ${active ? "text-fg" : "text-muted"}`} />
     </span>
   );
 }
@@ -134,7 +132,7 @@ export function Related({ items, start }: { items: RelatedItem[]; start: number 
                     i === sel ? "outline outline-1 outline-offset-[6px] outline-accent" : "opacity-50 outline-transparent hover:opacity-80"
                   }`}
                 >
-                  <Media item={item} sizes="300px" />
+                  <Media item={item} active={i === sel} />
                   <span className="label absolute top-3 left-3 text-left text-[13px] text-white mix-blend-difference">{item.title}</span>
                 </button>
               </li>
@@ -155,7 +153,7 @@ export function Related({ items, start }: { items: RelatedItem[]; start: number 
           aria-hidden
           className="pointer-events-none invisible absolute inset-0 overflow-hidden [--p:0] [clip-path:inset(calc(var(--t)*(1-var(--p)))_calc(var(--s)*(1-var(--p)))_calc(var(--b)*(1-var(--p)))_calc(var(--s)*(1-var(--p)))_round_calc(12px*(1-var(--p))))]"
         >
-          <Media item={current} color sizes="100vw" />
+          <Media item={current} active zoom />
         </div>
       </div>
     </section>
