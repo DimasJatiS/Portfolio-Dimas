@@ -5,22 +5,37 @@
 // - public/hero-fallback-{dark,light}.avif: still frame of the hero shader (lite/still tiers, 404)
 // - components/artwork/contour-paths.json: A1 topographic contours (noise field + marching squares)
 // Raw owner media lives in projects/ (not committed).
-import { mkdir, readdir, writeFile, rm } from "node:fs/promises";
+import { mkdir, writeFile, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const root = new URL("../", import.meta.url);
+// Owner decision (2026-11-26): at most 8 gallery images per project/activity, listed explicitly.
+const GALLERY_MAX = 8;
+const COVER_W = 1600; // covers are scaled up in the zoom gallery
+const PHOTO_W = 1200; // gallery and activity photos
+const MAX_BYTES = 300_000;
 const SOURCES = {
-  tbxxpert: { dir: "tbxxpert", cover: "cover.png", gallery: /^tbxpert-\d+\.jpe?g$/ },
-  "ai-cv-screen": { dir: "ai-cv-screen", cover: "cover.png", gallery: null },
-  inofa: { dir: "inofa", cover: "cover.png", gallery: /^inofa-\d+\.jpe?g$/, max: 6 },
-  "bloomarie-store": { dir: "bloomarie-store", cover: "cover.png", gallery: /^bloomarie-\d+\.jpe?g$/ },
-  siakad: { dir: "siakad", cover: "siakad-1.png", gallery: /^siakad-[2-9]\.png$/ },
+  tbxxpert: { dir: "tbxxpert", cover: "cover.png", gallery: ["tbxpert-1.jpeg", "tbxpert-2.jpeg", "tbxpert-3.jpeg", "tbxpert-4.jpeg"] },
+  "ai-cv-screen": { dir: "ai-cv-screen", cover: "cover.png", gallery: [] },
+  // 8 of 31: landing, sign-up, find developers, projects, admin, developer dashboard, chat, payment.
+  inofa: { dir: "inofa", cover: "cover.png", gallery: [20, 11, 22, 14, 15, 30, 17, 27].map((n) => `inofa-${n}.jpeg`) },
+  "bloomarie-store": { dir: "bloomarie-store", cover: "cover.png", gallery: ["featured.jpeg", "product.jpeg", "Whole page.jpeg"] },
+  siakad: { dir: "siakad", cover: "cover.png", gallery: ["siakad-1.png", "siakad-2.png", "siakad-3.png"] },
   // Gallery = phone screenshots of a landscape video: `band` crops each to the lit band in the middle.
-  shardfall: { dir: "shardfall-game", cover: "WhatsApp Image 2026-11-19 at 12.36.06 PM.jpeg", gallery: /^WhatsApp Image .* at 12\.38\..*\.jpeg$/, band: true },
+  shardfall: { dir: "shardfall-game", cover: "cover.jpeg", gallery: ["gameplay 1.jpeg", "gameplay 2.jpeg", "gameplay 3.jpeg"], band: true },
+  // Full-screen macOS screenshots: `cropTop` drops the 50 px menu bar.
+  chainfolio: { dir: "Chainfolio", cover: "Main.png", gallery: ["login.png", "Register.png"], cropTop: 50 },
 };
-const num = (f) => Number(f.match(/(\d+)\./)?.[1] ?? 0);
-const byNumberThenName = (a, b) => num(a) - num(b) || a.localeCompare(b);
+
+/** JPEG at the highest quality ≤ `q` that stays under MAX_BYTES (drops 6 per try, floor 50). */
+async function jpeg(img, file, q) {
+  for (;;) {
+    const info = await img.clone().jpeg({ quality: q, mozjpeg: true }).toFile(file);
+    if (info.size <= MAX_BYTES || q <= 50) return info;
+    q -= 6;
+  }
+}
 
 /** Rows of a phone screenshot that hold the actual (landscape) picture: the tallest run of non-black rows, ignoring the status/control bars. */
 async function contentBand(file) {
@@ -42,44 +57,51 @@ async function contentBand(file) {
   return { left: 0, top: best.top, width: info.width, height: best.height };
 }
 
+/** Opens a source image upright, minus `top` rows (menu bars). */
+async function open(file, top = 0) {
+  if (!top) return sharp(file).rotate();
+  const { width, height } = await sharp(file).metadata();
+  return sharp(file).extract({ left: 0, top, width, height: height - top });
+}
+
 const media = {};
 for (const [slug, src] of Object.entries(SOURCES)) {
   const inDir = new URL(`projects/${src.dir}/`, root);
   const outDir = new URL(`public/projects/${slug}/`, root);
   await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
-  const cover = sharp(fileURLToPath(new URL(src.cover, inDir))).resize({ width: 1600, withoutEnlargement: true });
+  const cover = (await open(fileURLToPath(new URL(src.cover, inDir)), src.cropTop)).resize({ width: COVER_W, withoutEnlargement: true });
   // Gallery tiles are scaled up to 9×, so grayscale is baked into the file (no CSS filter).
-  const grayInfo = await cover.clone().grayscale().jpeg({ quality: 72, mozjpeg: true }).toFile(fileURLToPath(new URL("cover.jpg", outDir)));
-  await cover.clone().jpeg({ quality: 76, mozjpeg: true }).toFile(fileURLToPath(new URL("cover-color.jpg", outDir)));
+  const grayInfo = await jpeg(cover.clone().grayscale(), fileURLToPath(new URL("cover.jpg", outDir)), 72);
+  await jpeg(cover, fileURLToPath(new URL("cover-color.jpg", outDir)), 76);
   const entry = { cover: { src: `/projects/${slug}/cover.jpg`, color: `/projects/${slug}/cover-color.jpg`, width: grayInfo.width, height: grayInfo.height }, gallery: [] };
-  if (src.gallery) {
-    const files = (await readdir(inDir)).filter((f) => src.gallery.test(f)).sort(byNumberThenName).slice(0, src.max ?? 8);
-    for (const [i, f] of files.entries()) {
-      const file = fileURLToPath(new URL(f, inDir));
-      const img = src.band ? sharp(file).extract(await contentBand(file)) : sharp(file);
-      const info = await img.resize({ width: 1600, withoutEnlargement: true }).jpeg({ quality: 76, mozjpeg: true }).toFile(fileURLToPath(new URL(`gallery-${i + 1}.jpg`, outDir)));
-      entry.gallery.push({ src: `/projects/${slug}/gallery-${i + 1}.jpg`, width: info.width, height: info.height });
-    }
+  for (const [i, f] of src.gallery.slice(0, GALLERY_MAX).entries()) {
+    const file = fileURLToPath(new URL(f, inDir));
+    const img = (src.band ? sharp(file).extract(await contentBand(file)) : await open(file, src.cropTop)).resize({ width: PHOTO_W, withoutEnlargement: true });
+    const info = await jpeg(img, fileURLToPath(new URL(`gallery-${i + 1}.jpg`, outDir)), 76);
+    entry.gallery.push({ src: `/projects/${slug}/gallery-${i + 1}.jpg`, width: info.width, height: info.height });
   }
   media[slug] = entry;
 }
 await writeFile(new URL("lib/content/media.json", root), JSON.stringify(media, null, 2) + "\n");
 
-// Activity photos (activities/<slug>/, owner media) → public/activities/<slug>/photo-N(-gray).jpg.
-const ACTIVITIES = { "pimnas-39": "pimnas" };
+// Activity photos (activities/, owner media) → public/activities/<slug>/photo-N(-gray).jpg, in this order.
+const ACTIVITIES = {
+  "pimnas-39": ["pimnas/WhatsApp Image 2026-11-18 at 9.25.28 PM (1).jpeg", "pimnas/WhatsApp Image 2026-11-18 at 9.25.28 PM.jpeg", "Foto/kandang-pimnas.jpeg", "Foto/Lab-pimnas.jpeg"],
+  "gelex-ugm-2025": ["Foto/Medis-Gelex-1.jpeg", "Foto/Medis-Gelex-2.jpeg", "Foto/Medis-Gelex-3.jpeg"],
+  "revogy-2026": ["Foto/IT-revogy.jpeg"],
+  "sre-ugm": ["Foto/RnI-SRE.jpeg"],
+};
 const activityMedia = {};
-for (const [slug, dir] of Object.entries(ACTIVITIES)) {
-  const inDir = new URL(`activities/${dir}/`, root);
+await rm(new URL("public/activities/", root), { recursive: true, force: true });
+for (const [slug, files] of Object.entries(ACTIVITIES)) {
   const outDir = new URL(`public/activities/${slug}/`, root);
-  await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
-  const files = (await readdir(inDir)).filter((f) => /\.(jpe?g|png)$/i.test(f)).sort();
   activityMedia[slug] = [];
-  for (const [i, f] of files.entries()) {
-    const img = sharp(fileURLToPath(new URL(f, inDir))).rotate().resize({ width: 1600, withoutEnlargement: true });
-    const info = await img.clone().jpeg({ quality: 78, mozjpeg: true }).toFile(fileURLToPath(new URL(`photo-${i + 1}.jpg`, outDir)));
-    await img.clone().grayscale().jpeg({ quality: 74, mozjpeg: true }).toFile(fileURLToPath(new URL(`photo-${i + 1}-gray.jpg`, outDir)));
+  for (const [i, f] of files.slice(0, GALLERY_MAX + 1).entries()) {
+    const img = sharp(fileURLToPath(new URL(`activities/${f}`, root))).rotate().resize({ width: PHOTO_W, withoutEnlargement: true });
+    const info = await jpeg(img, fileURLToPath(new URL(`photo-${i + 1}.jpg`, outDir)), 78);
+    await jpeg(img.clone().grayscale(), fileURLToPath(new URL(`photo-${i + 1}-gray.jpg`, outDir)), 74);
     activityMedia[slug].push({ src: `/activities/${slug}/photo-${i + 1}.jpg`, gray: `/activities/${slug}/photo-${i + 1}-gray.jpg`, width: info.width, height: info.height });
   }
 }

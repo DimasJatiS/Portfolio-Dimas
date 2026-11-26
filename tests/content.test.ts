@@ -5,7 +5,8 @@ import { buildGalleryTiles, mediaSet, pick, resolveContent, resolveImage, rowRat
 import { seed } from "@/lib/content/seed";
 import { splitAccent, stripAccent } from "@/lib/content/text";
 import { GLYPHS } from "@/lib/content/types";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
 
 const keys = (o: object, prefix = ""): string[] =>
   Object.entries(o).flatMap(([k, v]) => (v && typeof v === "object" ? keys(v, `${prefix}${k}.`) : [`${prefix}${k}`]));
@@ -54,10 +55,45 @@ describe("seed", () => {
     expect(starts).toEqual([...starts].sort().reverse());
     expect(content.projects[0]!.slug).toBe("chainfolio");
   });
+  it("has the six activities, newest first", () =>
+    expect(resolveContent(seed, "en").activities.map((a) => a.slug)).toEqual([
+      "pimnas-39",
+      "revogy-2026",
+      "long-distance-running",
+      "dbl-yogyakarta-2025",
+      "sre-ugm",
+      "gelex-ugm-2025",
+    ]));
+  it("new activities have id copy", () => {
+    expect(content.activities.find((a) => a.slug === "revogy-2026")!.title).toBe("Operator IT, REVOGY 2026");
+    expect(content.activities.find((a) => a.slug === "dbl-yogyakarta-2025")!.title).toBe("Tim medis, DBL Yogyakarta 2025");
+    expect(content.activities.find((a) => a.slug === "sre-ugm")!.summary).toBe("Tim solar & elektronika di divisi Research and Innovation.");
+  });
+  it("gives every project a cover", () => expect(content.projects.every((p) => p.cover)).toBe(true));
+  it("caps every gallery at 8 images", () => {
+    expect([...content.projects, ...content.activities].every((x) => x.gallery.length <= 8)).toBe(true);
+    expect(content.projects.find((p) => p.slug === "innofa")!.gallery).toHaveLength(8);
+  });
+  it("uses the matching glyph for each project and activity", () => {
+    const glyph = (slug: string) => [...content.projects, ...content.activities].find((x) => x.slug === slug)!.glyph;
+    expect([glyph("shardfall"), glyph("chainfolio"), glyph("pimnas-39"), glyph("sre-ugm"), glyph("revogy-2026"), glyph("dbl-yogyakarta-2025")]).toEqual([
+      "console",
+      "portfolio",
+      "chicken",
+      "bolt",
+      "podium",
+      "basketball",
+    ]);
+  });
+  it("keeps every generated image under 300 KB", () => {
+    const walk = (d: string): string[] => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+    const big = [...walk("public/projects"), ...walk("public/activities")].filter((f) => /\.(jpe?g|png)$/i.test(f) && statSync(f).size > 300_000);
+    expect(big).toEqual([]);
+  });
   it("has no hero label by default", () => expect(resolveContent(seed, "en").settings.heroLabel).toBe(""));
   it("gives every project a case study", () => expect(content.projects.every((p) => p.problem && p.decisions.length > 0)).toBe(true));
   it("only references media that exists", () => {
-    for (const p of content.projects) for (const img of [p.cover, ...p.gallery].filter((i) => i !== undefined)) {
+    for (const p of [...content.projects, ...content.activities]) for (const img of [p.cover, ...p.gallery].filter((i) => i !== undefined)) {
       expect(existsSync(`public${img.src}`)).toBe(true);
       expect(existsSync(`public${img.gray}`)).toBe(true);
     }

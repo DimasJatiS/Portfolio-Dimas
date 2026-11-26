@@ -11,6 +11,54 @@
       "gray": "/activities/pimnas-39/photo-2-gray.jpg",
       "width": 780,
       "height": 1040
+    },
+    {
+      "src": "/activities/pimnas-39/photo-3.jpg",
+      "gray": "/activities/pimnas-39/photo-3-gray.jpg",
+      "width": 960,
+      "height": 1280
+    },
+    {
+      "src": "/activities/pimnas-39/photo-4.jpg",
+      "gray": "/activities/pimnas-39/photo-4-gray.jpg",
+      "width": 960,
+      "height": 1280
+    }
+  ],
+  "gelex-ugm-2025": [
+    {
+      "src": "/activities/gelex-ugm-2025/photo-1.jpg",
+      "gray": "/activities/gelex-ugm-2025/photo-1-gray.jpg",
+      "width": 720,
+      "height": 1280
+    },
+    {
+      "src": "/activities/gelex-ugm-2025/photo-2.jpg",
+      "gray": "/activities/gelex-ugm-2025/photo-2-gray.jpg",
+      "width": 720,
+      "height": 1280
+    },
+    {
+      "src": "/activities/gelex-ugm-2025/photo-3.jpg",
+      "gray": "/activities/gelex-ugm-2025/photo-3-gray.jpg",
+      "width": 1200,
+      "height": 900
+    }
+  ],
+  "revogy-2026": [
+    {
+      "src": "/activities/revogy-2026/photo-1.jpg",
+      "gray": "/activities/revogy-2026/photo-1-gray.jpg",
+      "width": 720,
+      "height": 1280
+    }
+  ],
+  "sre-ugm": [
+    {
+      "src": "/activities/sre-ugm/photo-1.jpg",
+      "gray": "/activities/sre-ugm/photo-1-gray.jpg",
+      "width": 960,
+      "height": 1280
     }
   ]
 }

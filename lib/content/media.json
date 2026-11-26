@@ -48,33 +48,43 @@
     "gallery": [
       {
         "src": "/projects/inofa/gallery-1.jpg",
-        "width": 1600,
-        "height": 1447
+        "width": 1200,
+        "height": 616
       },
       {
         "src": "/projects/inofa/gallery-2.jpg",
-        "width": 1398,
+        "width": 667,
         "height": 1600
       },
       {
         "src": "/projects/inofa/gallery-3.jpg",
-        "width": 1600,
-        "height": 961
+        "width": 1200,
+        "height": 1108
       },
       {
         "src": "/projects/inofa/gallery-4.jpg",
-        "width": 1600,
-        "height": 961
+        "width": 1200,
+        "height": 655
       },
       {
         "src": "/projects/inofa/gallery-5.jpg",
-        "width": 1600,
-        "height": 1484
+        "width": 1200,
+        "height": 1091
       },
       {
         "src": "/projects/inofa/gallery-6.jpg",
-        "width": 1600,
-        "height": 817
+        "width": 1200,
+        "height": 833
+      },
+      {
+        "src": "/projects/inofa/gallery-7.jpg",
+        "width": 1200,
+        "height": 569
+      },
+      {
+        "src": "/projects/inofa/gallery-8.jpg",
+        "width": 1200,
+        "height": 979
       }
     ]
   },
@@ -88,13 +98,13 @@
     "gallery": [
       {
         "src": "/projects/bloomarie-store/gallery-1.jpg",
-        "width": 1424,
-        "height": 885
+        "width": 1200,
+        "height": 746
       },
       {
         "src": "/projects/bloomarie-store/gallery-2.jpg",
-        "width": 1481,
-        "height": 1411
+        "width": 1200,
+        "height": 1143
       },
       {
         "src": "/projects/bloomarie-store/gallery-3.jpg",
@@ -113,18 +123,18 @@
     "gallery": [
       {
         "src": "/projects/siakad/gallery-1.jpg",
-        "width": 1600,
-        "height": 853
+        "width": 1200,
+        "height": 639
       },
       {
         "src": "/projects/siakad/gallery-2.jpg",
-        "width": 1600,
-        "height": 882
+        "width": 1200,
+        "height": 662
       },
       {
         "src": "/projects/siakad/gallery-3.jpg",
-        "width": 1600,
-        "height": 886
+        "width": 1200,
+        "height": 665
       }
     ]
   },
@@ -139,17 +149,37 @@
       {
         "src": "/projects/shardfall/gallery-1.jpg",
         "width": 576,
-        "height": 253
+        "height": 284
       },
       {
         "src": "/projects/shardfall/gallery-2.jpg",
         "width": 576,
-        "height": 285
+        "height": 253
       },
       {
         "src": "/projects/shardfall/gallery-3.jpg",
         "width": 576,
-        "height": 284
+        "height": 285
+      }
+    ]
+  },
+  "chainfolio": {
+    "cover": {
+      "src": "/projects/chainfolio/cover.jpg",
+      "color": "/projects/chainfolio/cover-color.jpg",
+      "width": 1600,
+      "height": 976
+    },
+    "gallery": [
+      {
+        "src": "/projects/chainfolio/gallery-1.jpg",
+        "width": 1200,
+        "height": 732
+      },
+      {
+        "src": "/projects/chainfolio/gallery-2.jpg",
+        "width": 1200,
+        "height": 732
       }
     ]
   }

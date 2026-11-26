@@ -13,8 +13,8 @@ const decision = ([enTitle, enBody]: [string, string], [idTitle, idBody]: [strin
   body: { en: enBody, id: idBody },
 });
 
-function activityPhoto(index: number, alt: I18n): RawImage {
-  const p = activityMedia["pimnas-39"][index]!;
+function activityPhoto(slug: keyof typeof activityMedia, index: number, alt: I18n): RawImage {
+  const p = activityMedia[slug][index]!;
   return { url: p.src, grayUrl: p.gray, width: p.width, height: p.height, alt };
 }
 
@@ -285,7 +285,7 @@ export const seed: RawContent = {
       year: "2026",
       team: "Delviano Khayru Attahira (backend) · Prihastomo Budi Satrio (frontend)",
       stack: ["Solidity", "Hardhat", "Monad", "Colyseus", "React", "Three.js"],
-      glyph: "shard",
+      glyph: "console",
       cover: cover("shardfall", "Shardfall"),
       galleryTile: true,
       repoUrl: "https://github.com/DimasJatiS/SHARDFALL-WEB3Game",
@@ -337,7 +337,9 @@ export const seed: RawContent = {
       year: "2026",
       team: "Solo",
       stack: ["Laravel 13", "Vue 3", "MySQL", "Docker", "GitHub Actions"],
-      glyph: "chain",
+      glyph: "portfolio",
+      cover: cover("chainfolio", "ChainFolio"),
+      gallery: gallery("chainfolio", "ChainFolio"),
       galleryTile: true,
       repoUrl: "https://github.com/DimasJatiS/uts-pl-24-541641-SV-24935",
       problem: rich(
@@ -377,7 +379,7 @@ export const seed: RawContent = {
   activities: [
     {
       slug: "pimnas-39",
-      glyph: "trophy",
+      glyph: "chicken",
       title: { en: "PIMNAS 39 — National finalist, PKM-RE", id: "PIMNAS 39 — Finalis nasional, PKM-RE" },
       org: "Belmawa · Kemdiktisaintek",
       type: "competition",
@@ -403,8 +405,12 @@ export const seed: RawContent = {
           "Lokasi: Universitas Diponegoro, Semarang. Penyelenggara: Belmawa dan Kemdiktisaintek.",
         ),
       },
-      cover: activityPhoto(1, { en: "The Chromozorb team at PIMNAS 39, Universitas Diponegoro", id: "Tim Chromozorb di PIMNAS 39, Universitas Diponegoro" }),
-      gallery: [activityPhoto(0, { en: "The team with their supervisor at PIMNAS 39", id: "Tim bersama dosen pembina di PIMNAS 39" })],
+      cover: activityPhoto("pimnas-39", 1, { en: "The Chromozorb team at PIMNAS 39, Universitas Diponegoro", id: "Tim Chromozorb di PIMNAS 39, Universitas Diponegoro" }),
+      gallery: [
+        activityPhoto("pimnas-39", 0, { en: "The team with their supervisor at PIMNAS 39", id: "Tim bersama dosen pembina di PIMNAS 39" }),
+        activityPhoto("pimnas-39", 3, { en: "Preparing the Chromozorb extract in the lab", id: "Menyiapkan ekstrak Chromozorb di laboratorium" }),
+        activityPhoto("pimnas-39", 2, { en: "Broiler trial pens for the feed additive", id: "Kandang uji ayam broiler untuk pakan tambahan" }),
+      ],
       featured: true,
       order: 1,
     },
@@ -430,6 +436,11 @@ export const seed: RawContent = {
           "Peran ini mengajarkan saya untuk tetap tenang dan cepat mengambil keputusan di tengah keramaian.",
         ),
       },
+      cover: activityPhoto("gelex-ugm-2025", 2, { en: "The GELEX UGM 2025 medical team", id: "Tim medis GELEX UGM 2025" }),
+      gallery: [
+        activityPhoto("gelex-ugm-2025", 0, { en: "Medical team group photo at GELEX UGM 2025", id: "Foto bersama tim medis GELEX UGM 2025" }),
+        activityPhoto("gelex-ugm-2025", 1, { en: "Photo strip of the GELEX medical team", id: "Photo strip tim medis GELEX" }),
+      ],
       featured: true,
       order: 2,
     },
@@ -455,6 +466,77 @@ export const seed: RawContent = {
       },
       featured: true,
       order: 3,
+    },
+    {
+      slug: "revogy-2026",
+      glyph: "podium",
+      title: { en: "IT operator, REVOGY 2026", id: "Operator IT, REVOGY 2026" },
+      org: "Society of Renewable Energy UGM",
+      type: "competition",
+      startDate: "2026-03-08",
+      summary: {
+        en: "Ran the OBS broadcast and designed event visuals for REVOGY 2026, SRE UGM's international energy case competition with 300+ teams from Indonesia, Japan, Australia and the US.",
+        id: "Mengoperasikan siaran OBS dan membuat desain acara untuk REVOGY 2026, kompetisi studi kasus energi internasional SRE UGM dengan 300+ tim dari Indonesia, Jepang, Australia, dan Amerika Serikat.",
+      },
+      body: {
+        en: blocks(
+          "REVOGY 2026 is the international energy competition of the Society of Renewable Energy UGM, with a business case and a mini case track. More than 300 teams and individuals took part, from Indonesia and from countries such as Japan, Australia and the United States.",
+          "As IT operator I ran the OBS broadcast for the sessions and made several of the designs the event needed.",
+        ),
+        id: blocks(
+          "REVOGY 2026 adalah kompetisi energi internasional Society of Renewable Energy UGM, dengan kategori business case dan mini case. Lebih dari 300 tim dan peserta individu ikut serta, dari Indonesia dan negara lain seperti Jepang, Australia, dan Amerika Serikat.",
+          "Sebagai operator IT, saya mengoperasikan siaran OBS untuk sesi acara dan membuat beberapa desain yang dibutuhkan acara.",
+        ),
+      },
+      cover: activityPhoto("revogy-2026", 0, { en: "Running the REVOGY 2026 talk show broadcast", id: "Menjalankan siaran talk show REVOGY 2026" }),
+      featured: true,
+      order: 4,
+    },
+    {
+      slug: "sre-ugm",
+      glyph: "bolt",
+      title: { en: "Research & Innovation, Society of Renewable Energy UGM", id: "Research & Innovation, Society of Renewable Energy UGM" },
+      org: "Society of Renewable Energy UGM",
+      type: "organization",
+      // shortcut: only the year is shown; set the exact start and end dates in Sanity.
+      startDate: "2025-09-01",
+      endDate: "2026-08-31",
+      summary: {
+        en: "Solar & electronics team in the Research and Innovation division.",
+        id: "Tim solar & elektronika di divisi Research and Innovation.",
+      },
+      body: {
+        en: blocks("Member of the solar and electronics team in the Research and Innovation division of the Society of Renewable Energy UGM, for the 2025–2026 term."),
+        id: blocks("Anggota tim solar dan elektronika di divisi Research and Innovation Society of Renewable Energy UGM, periode 2025–2026."),
+      },
+      cover: activityPhoto("sre-ugm", 0, { en: "The SRE UGM Research and Innovation division", id: "Divisi Research and Innovation SRE UGM" }),
+      featured: true,
+      order: 5,
+    },
+    {
+      slug: "dbl-yogyakarta-2025",
+      glyph: "basketball",
+      title: { en: "Medical support team, DBL Yogyakarta 2025", id: "Tim medis, DBL Yogyakarta 2025" },
+      org: "DBL Indonesia",
+      type: "event",
+      startDate: "2025-10-17",
+      endDate: "2025-10-31",
+      summary: {
+        en: "Medical support for players and spectators over two weeks of Indonesia's high-school basketball league at GOR UNY, with 45 teams competing.",
+        id: "Dukungan medis untuk pemain dan penonton selama dua pekan liga basket pelajar DBL di GOR UNY, diikuti 45 tim.",
+      },
+      body: {
+        en: blocks(
+          "DBL Yogyakarta 2025 ran from 17 to 31 October 2025 at GOR UNY, with 27 boys' and 18 girls' high-school teams.",
+          "I was part of the medical support team on standby for players and spectators throughout the series.",
+        ),
+        id: blocks(
+          "DBL Yogyakarta 2025 berlangsung 17–31 Oktober 2025 di GOR UNY, diikuti 27 tim putra dan 18 tim putri SMA.",
+          "Saya tergabung di tim medis yang siaga untuk pemain dan penonton selama rangkaian seri berlangsung.",
+        ),
+      },
+      featured: true,
+      order: 6,
     },
   ],
   skills: [
