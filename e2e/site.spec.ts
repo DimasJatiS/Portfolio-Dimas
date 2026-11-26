@@ -110,3 +110,36 @@ test("related work shows animated glyphs, not photos", async ({ page }) => {
   await expect(cards.first().locator("svg.glyph")).toHaveCount(1);
   await expect(page.locator("[data-zoom] img")).toHaveCount(0);
 });
+
+test("timeline accordion is keyboard operable", async ({ page }) => {
+  await page.goto("/?motion=still");
+  const rows = page.locator("#experience button[aria-expanded]");
+  await expect(rows).toHaveCount(6);
+  await expect(rows.first()).toHaveAttribute("aria-expanded", "true");
+  await rows.nth(1).focus();
+  await page.keyboard.press("Enter");
+  await expect(rows.nth(1)).toHaveAttribute("aria-expanded", "true");
+  await expect(rows.first()).toHaveAttribute("aria-expanded", "false");
+  // A closed panel is inert, so its links are out of the tab order.
+  await expect(page.locator(`#${await rows.first().getAttribute("aria-controls")}`)).toHaveAttribute("inert", "");
+  await page.keyboard.press("Space");
+  await expect(rows.nth(1)).toHaveAttribute("aria-expanded", "false");
+});
+
+test("timeline still tier draws a straight line and opens instantly", async ({ page }) => {
+  await page.goto("/?motion=still");
+  await expect(page.locator("#experience [stroke-dasharray]")).toHaveCount(0);
+  const row = page.locator("#experience button[aria-expanded]").nth(2);
+  await row.click();
+  await expect(row).toHaveAttribute("aria-expanded", "true");
+  const panel = page.locator(`#${await row.getAttribute("aria-controls")}`);
+  await expect(panel.getByRole("link")).toBeVisible();
+});
+
+test("timeline accordion keeps later sections reachable", async ({ page }) => {
+  await page.goto("/?motion=still");
+  await page.locator("#experience button[aria-expanded]").nth(3).click();
+  await page.waitForTimeout(700);
+  await page.locator("#contact").scrollIntoViewIfNeeded();
+  await expect(page.locator("#contact")).toBeInViewport();
+});
