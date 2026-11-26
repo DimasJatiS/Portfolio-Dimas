@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("meta");
   return {
     metadataBase: new URL(SITE_URL),
-    title: { default: t("title"), template: `%s — ${SITE_NAME}` },
+    title: { default: t("title"), template: `%s | ${SITE_NAME}` },
     description: t("description"),
     applicationName: SITE_NAME,
     authors: [{ name: SITE_NAME }],

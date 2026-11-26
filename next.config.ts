@@ -30,6 +30,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // AGENTS.md is kept by hand (no em dashes); next dev would rewrite its block on every start.
+  agentRules: false,
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],

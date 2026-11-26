@@ -1,4 +1,4 @@
-# Dimas Jati Satria — Portfolio ("Summit")
+# Dimas Jati Satria - Portfolio ("Summit")
 
 Personal portfolio of a software engineer (full-stack + AI), built to land an internship from February 2027.
 Monochrome with one bronze light, a WebGL grain shader in the hero, scroll-scrubbed parallax and zoom, English + Indonesian, content in Sanity.

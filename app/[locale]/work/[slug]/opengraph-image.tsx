@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import type { Locale } from "@/i18n/routing";
 import { getContent } from "@/lib/content/get";
 
-export const alt = "Case study — Dimas Jati Satria";
+export const alt = "Case study | Satria's";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

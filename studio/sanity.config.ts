@@ -8,7 +8,7 @@ const dataset = process.env.SANITY_STUDIO_DATASET ?? "production";
 
 export default defineConfig({
   name: "summit",
-  title: "Dimas Jati Satria — Portfolio",
+  title: "Satria's",
   projectId,
   dataset,
   plugins: [

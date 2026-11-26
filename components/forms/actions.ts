@@ -42,7 +42,7 @@ export async function sendMessage(_prev: ContactState, form: FormData): Promise<
       to: env.CONTACT_TO_EMAIL!,
       replyTo: email,
       subject: `Portfolio message from ${name}${company ? ` (${company})` : ""}`,
-      text: `${message}\n\n— ${name} <${email}>${company ? `\n${company}` : ""}`,
+      text: `${message}\n\n- ${name} <${email}>${company ? `\n${company}` : ""}`,
     });
     if (error) throw new Error(error.message);
     return { status: "success" };

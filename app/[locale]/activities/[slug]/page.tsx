@@ -40,7 +40,7 @@ export default async function ActivityPage({ params }: Params) {
   const { activity: a, related } = await load(slug);
   const t = await getTranslations("activity");
   const w = await getTranslations("case");
-  const period = [a.startYear, a.endYear].filter(Boolean).join(" — ");
+  const period = [a.startYear, a.endYear].filter(Boolean).join(" - ");
   const media = mediaSet(a.cover, a.gallery);
   // Photos already shown in the opening frame are not repeated below.
   const rest = a.gallery.filter((g) => !media.some((m) => m.src === g.src));

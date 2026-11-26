@@ -35,7 +35,7 @@ export default async function ActivitiesIndex() {
           key: a.slug,
           href: a.hasDetail ? `/activities/${a.slug}` : undefined,
           title: a.title,
-          meta: [t(`types.${a.type}`), [a.startYear, a.endYear].filter(Boolean).join(" — ")].filter(Boolean).join(" · "),
+          meta: [t(`types.${a.type}`), [a.startYear, a.endYear].filter(Boolean).join(" - ")].filter(Boolean).join(" · "),
           summary: a.summary,
           images: mediaSet(a.cover, a.gallery),
           glyph: a.glyph,

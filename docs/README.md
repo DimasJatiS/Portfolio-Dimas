@@ -1,4 +1,4 @@
-# Dokumentasi — Portfolio Summit v3
+# Dokumentasi - Portfolio Summit v3
 
 Dokumen ini menjelaskan portofolio **seperti yang dibangun**. Dokumen perencanaan (PRD, Spesifikasi Lanjutan, Motion & Artwork, Teardown, Checklist) tetap di folder ini tetapi tidak ikut git.
 

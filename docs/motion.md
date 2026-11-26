@@ -48,8 +48,8 @@ A1 kontur: medan noise + marching squares di `scripts/prepare-media.mjs` → `co
 | Ukuran | Hasil | Target |
 | --- | --- | --- |
 | Scroll otomatis atas→bawah 8 dtk, `?motion=full` | rata-rata 40 fps, p95 51ms, 0 long task | 60 fps desktop |
-| Bagian kartu Work saja | 51 fps (34 sebelum `will-change` di kartu) | — |
-| Gallery Work saja | 49 fps | — |
+| Bagian kartu Work saja | 51 fps (34 sebelum `will-change` di kartu) | - |
+| Gallery Work saja | 49 fps | - |
 | CLS selama scroll | 0,000 (1,99 dengan pin GSAP) | < 0,05 |
 | LCP mobile, Slow 4G + CPU 4× | 1,94 dtk, CLS 0 | < 2,5 dtk |
 | Long task > 50ms saat scroll | 0 | 0 |

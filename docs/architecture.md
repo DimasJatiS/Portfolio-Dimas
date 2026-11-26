@@ -41,7 +41,7 @@ Grid: container 1440px, gutter `clamp(16px, 4vw, 64px)`, garis grid hairline 4 k
 | 06 Contact | `sections/Contact.tsx` | `siteSettings` + env | Form hanya bila 5 kunci ada; kanal yang kosong disembunyikan |
 | `/work/[slug]` | `app/[locale]/work/[slug]` | proyek dengan `problem` atau `decisions` | Hero sticky M-22, meta, isi, galeri, next project, JSON-LD, OG |
 | `/activities/[slug]` | `app/[locale]/activities/[slug]` | aktivitas dengan body/gambar | Template ringkas |
-| 404 | `app/[locale]/not-found.tsx` | — | Frame shader diam + kontur |
+| 404 | `app/[locale]/not-found.tsx` | - | Frame shader diam + kontur |
 | `/cv.pdf` | `app/cv.pdf/route.ts` | `siteSettings.cv` | Redirect unduhan, 404 bila belum ada |
 
 ## Keamanan

@@ -11,26 +11,29 @@ import { gsap, getTier, SCRUB, ScrollTrigger, useGSAP } from "@/lib/motion/gsap"
 type Props = { label: string; items: Activity[] };
 
 /**
- * Timeline (max. 6) as an accordion on one straight line: a bronze progress bar and dot follow the
- * scroll (M-28); one row is open at a time and slides open (grid-rows 0fr → 1fr, no library).
- * Photos in a panel load on its first open. On fine pointers the cursor becomes a disc that
- * inverts the colours under it.
+ * Timeline (max. 6) on one straight line: a bronze progress bar and dot follow the scroll (M-28).
+ * Rows slide open by scroll, not by click: a row opens once its top passes 60% of the viewport and
+ * closes again when scrolled back above that line. Only rows at or below that line change height,
+ * so the text being read never jumps. Photos in a panel load on its first open. On fine pointers
+ * the cursor becomes a disc that inverts the colours under it.
  */
 export function Experience({ label, items }: Props) {
   const t = useTranslations("activity");
   const uid = useId();
   const ref = useRef<HTMLOListElement>(null);
-  const [open, setOpen] = useState<string | null>(items[0]?.slug ?? null);
-  const [seen, setSeen] = useState<ReadonlySet<string>>(() => new Set(items[0] ? [items[0].slug] : []));
+  const [open, setOpen] = useState<ReadonlySet<string>>(() => new Set());
+  const [seen, setSeen] = useState<ReadonlySet<string>>(() => new Set());
   const mounted = useRef(false);
-  // The tapped row's top before a toggle: a row closing above it must not push it away.
-  const anchor = useRef<{ el: HTMLElement; top: number } | null>(null);
 
-  const toggle = (slug: string, el: HTMLElement) => {
-    anchor.current = { el, top: el.getBoundingClientRect().top };
-    const next = open === slug ? null : slug;
-    setOpen(next);
-    if (next && !seen.has(next)) setSeen(new Set(seen).add(next));
+  const set = (slug: string, on: boolean) => {
+    setOpen((prev) => {
+      if (prev.has(slug) === on) return prev;
+      const next = new Set(prev);
+      if (on) next.add(slug);
+      else next.delete(slug);
+      return next;
+    });
+    if (on) setSeen((prev) => (prev.has(slug) ? prev : new Set(prev).add(slug)));
   };
 
   // Opening a row changes the page height: re-measure every ScrollTrigger once the slide has ended.
@@ -39,25 +42,20 @@ export function Experience({ label, items }: Props) {
       mounted.current = true;
       return;
     }
-    const ms = getTier() === "still" ? 0 : 550;
-    // Manual scroll anchoring for the whole slide (Safari has no overflow-anchor); a no-op where the browser already anchors.
-    const a = anchor.current;
-    const end = performance.now() + ms;
-    let raf = 0;
-    const hold = () => {
-      if (a) {
-        const dy = a.el.getBoundingClientRect().top - a.top;
-        if (Math.abs(dy) > 0.5) window.scrollBy(0, dy);
-      }
-      if (performance.now() < end) raf = requestAnimationFrame(hold);
-    };
-    hold();
-    const id = setTimeout(() => ScrollTrigger.refresh(), ms);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearTimeout(id);
-    };
+    const id = setTimeout(() => ScrollTrigger.refresh(), getTier() === "still" ? 0 : 550);
+    return () => clearTimeout(id);
   }, [open]);
+
+  // One trigger per row; end "max" keeps every row above the line open.
+  useGSAP(
+    () => {
+      ref.current!.querySelectorAll<HTMLElement>("[data-row]").forEach((row) => {
+        const slug = row.dataset.row!;
+        ScrollTrigger.create({ trigger: row, start: "top 60%", end: "max", onToggle: (self) => set(slug, self.isActive) });
+      });
+    },
+    { scope: ref },
+  );
 
   useGSAP(
     () => {
@@ -123,7 +121,7 @@ export function Experience({ label, items }: Props) {
     { scope: ref },
   );
 
-  const period = (a: Activity) => [a.startYear, a.endYear && a.endYear !== a.startYear ? a.endYear : undefined].filter(Boolean).join(" — ");
+  const period = (a: Activity) => [a.startYear, a.endYear && a.endYear !== a.startYear ? a.endYear : undefined].filter(Boolean).join(" - ");
 
   return (
     <Section id="experience" tone="base" panel label={label}>
@@ -139,41 +137,30 @@ export function Experience({ label, items }: Props) {
         </li>
         <li aria-hidden data-disc className="pointer-events-none absolute top-0 left-0 z-10 hidden size-32 rounded-full bg-white mix-blend-difference [@media(hover:hover)_and_(pointer:fine)]:block" />
         {items.map((a) => {
-          const isOpen = open === a.slug;
-          const btn = `${uid}-${a.slug}-btn`;
-          const panel = `${uid}-${a.slug}-panel`;
+          const isOpen = open.has(a.slug);
+          const head = `${uid}-${a.slug}-head`;
           const photos = [a.cover, ...a.gallery].filter((img) => img !== undefined).slice(0, 3);
           return (
-            <li key={a.slug} data-row className="relative col-span-full grid grid-cols-subgrid border-t border-line py-8 [@media(hover:hover)_and_(pointer:fine)]:cursor-none">
+            // Keyboard: tabbing into a closed panel's link opens its row.
+            <li key={a.slug} data-row={a.slug} onFocus={() => set(a.slug, true)} className="relative col-span-full grid grid-cols-subgrid border-t border-line py-8 [@media(hover:hover)_and_(pointer:fine)]:cursor-none">
               <p className="label col-start-2 text-accent lg:col-span-2 lg:col-start-1">{period(a)}</p>
               <span
                 className={`col-start-1 row-start-1 mt-1.5 size-2 justify-self-center rounded-full transition-colors lg:col-start-3 lg:row-start-auto ${isOpen ? "bg-accent" : "bg-fg"}`}
               />
               <div className="col-start-2 lg:col-span-7 lg:col-start-4">
-                <h3>
-                  {/* The button's ::before covers the whole row, so the row is one click target. */}
-                  <button
-                    type="button"
-                    id={btn}
-                    aria-expanded={isOpen}
-                    aria-controls={panel}
-                    onClick={(e) => toggle(a.slug, e.currentTarget)}
-                    className="flex w-full items-start justify-between gap-6 text-left before:absolute before:inset-0 before:content-[''] [@media(hover:hover)_and_(pointer:fine)]:cursor-none"
-                  >
-                    <span>
-                      <span className="block text-[clamp(20px,2vw,28px)] leading-snug font-medium">{a.title}</span>
-                      {a.org && <span className="label mt-1 block text-muted">{a.org}</span>}
-                    </span>
-                    <svg viewBox="0 0 24 24" aria-hidden className={`mt-2 size-5 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-accent" : "text-muted"}`}>
-                      <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
+                <h3 id={head} className="flex items-start justify-between gap-6">
+                  <span>
+                    <span className="block text-[clamp(20px,2vw,28px)] leading-snug font-medium">{a.title}</span>
+                    {a.org && <span className="label mt-1 block text-muted">{a.org}</span>}
+                  </span>
+                  <svg viewBox="0 0 24 24" aria-hidden className={`mt-2 size-5 shrink-0 transition-transform duration-300 ${isOpen ? "rotate-180 text-accent" : "text-muted"}`}>
+                    <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </h3>
+                {/* Not inert: screen readers and keyboard reach the content without scrolling to it. */}
                 <div
-                  id={panel}
                   role="region"
-                  aria-labelledby={btn}
-                  inert={!isOpen}
+                  aria-labelledby={head}
                   data-open={isOpen || undefined}
                   className="relative z-10 grid cursor-auto grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[var(--ease-out)] data-[open]:grid-rows-[1fr] in-data-[motion=still]:duration-0"
                 >

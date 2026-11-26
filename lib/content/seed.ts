@@ -24,7 +24,7 @@ type MediaKey = keyof typeof media;
 
 function cover(slug: MediaKey, title: string): RawImage {
   const c = media[slug].cover;
-  return { url: c.color, grayUrl: c.src, width: c.width, height: c.height, alt: { en: `${title} — cover`, id: `${title} — sampul` } };
+  return { url: c.color, grayUrl: c.src, width: c.width, height: c.height, alt: { en: `${title} - cover`, id: `${title} - sampul` } };
 }
 
 function gallery(slug: MediaKey, title: string): RawImage[] {
@@ -32,7 +32,7 @@ function gallery(slug: MediaKey, title: string): RawImage[] {
     url: g.src,
     width: g.width,
     height: g.height,
-    alt: { en: `${title} — screenshot ${i + 1}`, id: `${title} — tangkapan layar ${i + 1}` },
+    alt: { en: `${title} - screenshot ${i + 1}`, id: `${title} - tangkapan layar ${i + 1}` },
   }));
 }
 
@@ -380,7 +380,7 @@ export const seed: RawContent = {
     {
       slug: "pimnas-39",
       glyph: "chicken",
-      title: { en: "PIMNAS 39 — National finalist, PKM-RE", id: "PIMNAS 39 — Finalis nasional, PKM-RE" },
+      title: { en: "PIMNAS 39 - National finalist, PKM-RE", id: "PIMNAS 39 - Finalis nasional, PKM-RE" },
       org: "Belmawa · Kemdiktisaintek",
       type: "competition",
       // shortcut: only the year is shown; set the exact date in Sanity.

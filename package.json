@@ -2,7 +2,7 @@
   "name": "summit-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Dimas Jati Satria — portfolio (Summit v3). Next.js 16, GSAP, three.js, Sanity, EN + ID.",
+  "description": "Dimas Jati Satria - portfolio (Summit v3). Next.js 16, GSAP, three.js, Sanity, EN + ID.",
   "type": "module",
   "packageManager": "pnpm@12.18.0",
   "engines": {

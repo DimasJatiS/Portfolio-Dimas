@@ -43,7 +43,7 @@ Webhook Sanity (POST ke `/api/revalidate`, secret = `SANITY_REVALIDATE_SECRET`, 
 
 **Selected work = proyek dengan `featured` aktif.** Proyek featured tampil sebagai kartu besar di Home dan sampulnya mengisi galeri zoom (pusat + dua slot). Idealnya tepat 3 proyek featured, masing-masing punya cover.
 
-### Cara 1 — Sanity Studio (langsung ke situs live, tanpa deploy)
+### Cara 1 - Sanity Studio (langsung ke situs live, tanpa deploy)
 
 1. Buka https://dimasjati.sanity.studio dan login dengan akun Sanity-mu (atau lokal: `cd studio && pnpm dev` → `http://localhost:3333`).
 2. **Project** → pilih proyek → tab **Card**:
@@ -54,7 +54,7 @@ Webhook Sanity (POST ke `/api/revalidate`, secret = `SANITY_REVALIDATE_SECRET`, 
 
 Catatan: `scripts/import-seed.ts` menimpa dokumen proyek dengan isi seed. Setelah mengedit di Studio, jangan jalankan import lagi kecuali seed juga sudah disamakan.
 
-### Cara 2 — File di repo (seed), lalu import
+### Cara 2 - File di repo (seed), lalu import
 
 1. Taruh gambar mentah di `projects/<folder>/` (folder ini tidak di-commit).
 2. Petakan di `scripts/prepare-media.mjs` → `SOURCES`: nama file `cover` dan pola `gallery`. Untuk screenshot HP dari video landscape, tambahkan `band: true` agar dipotong otomatis ke area gambar.

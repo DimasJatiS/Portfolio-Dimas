@@ -43,13 +43,14 @@ docs/superpowers/
 docs/references/
 docs/evidence/
 # design feedback screenshots (working notes, not part of the site)
+Sunsets/
 docs/slop/
-docs/PRD — Portfolio 3D Summit.md
-docs/Spesifikasi Lanjutan v3 — Layout, Motion, Content Model.md
-docs/Motion & Artwork v3 — Parallax Ringan.md
-docs/Checklist Pengembangan v3 — Portfolio Summit.md
-docs/Teardown Referensi v3 — Scroll & Zoom.md
-docs/Template Case Study — Portfolio Summit.md
+docs/PRD - Portfolio 3D Summit.md
+docs/Spesifikasi Lanjutan v3 - Layout, Motion, Content Model.md
+docs/Motion & Artwork v3 - Parallax Ringan.md
+docs/Checklist Pengembangan v3 - Portfolio Summit.md
+docs/Teardown Referensi v3 - Scroll & Zoom.md
+docs/Template Case Study - Portfolio Summit.md
 
 # OS, editor, logs
 .DS_Store

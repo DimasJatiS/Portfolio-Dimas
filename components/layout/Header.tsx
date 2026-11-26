@@ -57,7 +57,7 @@ function SectionLink({ id, className, onClick, children }: { id: string; classNa
 }
 
 export function Monogram({ className = "" }: { className?: string }) {
-  return <span className={`font-serif text-xl font-bold tracking-[-0.01em] ${className}`}>DJS</span>;
+  return <span className={`font-serif text-xl font-bold tracking-[-0.01em] ${className}`}>Satria&apos;s</span>;
 }
 
 /**
@@ -94,13 +94,13 @@ export function Header({ cvUrl }: { cvUrl?: string }) {
 
   return (
     <>
-      <header ref={ref} className="group/h fixed inset-x-0 top-0 z-50 h-[var(--header-h)] [--o:max(0px,calc((100vw-960px)/2-var(--gutter)+20px))]">
+      <header ref={ref} className="group/h fixed inset-x-0 top-0 z-50 h-[var(--header-h)] [--o:max(0px,calc((min(100vw,1440px)-960px)/2-var(--gutter)+20px))]">
         <div
           aria-hidden
           className="absolute inset-0 bg-[color-mix(in_srgb,var(--surface)_80%,transparent)] opacity-0 backdrop-blur-[12px] transition-[opacity,clip-path] duration-[400ms] ease-[var(--ease-out)] [clip-path:inset(0_0_round_0)] group-data-[condensed]/h:opacity-100 group-data-[condensed]/h:[clip-path:inset(10px_max(10px,calc((100%-960px)/2))_round_999px)]"
         />
         <div className="relative mx-auto flex h-full max-w-[1440px] items-center justify-between gap-4 px-[var(--gutter)]">
-          <Link href="/" aria-label={`DJS — ${t("home")}`} className="transition-transform duration-[400ms] ease-[var(--ease-out)] group-data-[condensed]/h:translate-x-[var(--o)]">
+          <Link href="/" aria-label={`Satria's, ${t("home")}`} className="transition-transform duration-[400ms] ease-[var(--ease-out)] group-data-[condensed]/h:translate-x-[var(--o)]">
             <Monogram />
           </Link>
           <nav aria-label={t("primary")} className="label absolute left-1/2 hidden -translate-x-1/2 gap-8 lg:flex">

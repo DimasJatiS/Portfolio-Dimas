@@ -3,11 +3,11 @@ import type { Locale } from "@/i18n/routing";
 import { getContent } from "@/lib/content/get";
 import { stripAccent } from "@/lib/content/text";
 
-export const alt = "Dimas Jati Satria — Software Engineer";
+export const alt = "Satria's";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** F-16: monochrome, typographic, one bronze light — the hero in 1200×630, per locale. */
+/** F-16: monochrome, typographic, one bronze light - the hero in 1200×630, per locale. */
 export default async function OpengraphImage({ params }: { params: Promise<{ locale: Locale }> }) {
   // Route handler: root params are not available here, so the locale comes from `params`.
   const { locale } = await params;
