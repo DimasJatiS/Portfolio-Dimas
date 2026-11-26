@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
 import { Glyph } from "@/components/artwork/Glyph";
 import type { GlyphId } from "@/lib/content/types";
@@ -109,8 +110,9 @@ export function WorkGallery({ tiles }: { tiles: GalleryTile[] }) {
               aria-hidden
               className={`media relative bg-[color-mix(in_srgb,var(--fg)_7%,var(--surface))] ${SLOT_CLASS[i] ?? ""}`}
             >
-              {tile.kind === "cover" && tile.gray ? (
-                // Grayscale is baked into the file: no CSS filter on an element scaled up to 9×.
+              {tile.kind === "cover" && tile.gray && i === CENTRE ? (
+                // The centre zooms to full screen, so it keeps the full 1600 px file. Grayscale is
+                // baked into the file: no CSS filter on an element scaled up to 9×.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={tile.gray}
@@ -119,6 +121,9 @@ export function WorkGallery({ tiles }: { tiles: GalleryTile[] }) {
                   decoding="async"
                   className="absolute inset-0 size-full object-cover"
                 />
+              ) : tile.kind === "cover" && tile.gray ? (
+                // The other tiles only overshoot off-screen: a slot-sized image is enough.
+                <Image src={tile.gray} alt="" fill sizes={i === 6 ? "(min-width: 640px) 100vw, 50vw" : "(min-width: 640px) 33vw, 50vw"} className="object-cover" />
               ) : (
                 <div className="grid size-full place-items-center text-muted">
                   <Glyph

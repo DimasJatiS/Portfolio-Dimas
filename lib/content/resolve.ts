@@ -110,21 +110,21 @@ export type Tile = { kind: "cover"; project: Project } | { kind: "glyph"; projec
 
 /**
  * Work zoom gallery (Spek 2.4, M-12): 7 slots in a 3×3 grid whose last row is one wide tile.
- * Featured covers take the centre (index 4), the wide tile (6) and the first tile (0);
- * the other slots show project glyphs. Works for any number of projects ≥ 1.
+ * Every project with a cover shows it: featured covers take the centre (4), the wide tile (6) and
+ * the first tile (0), then the other covers, then projects without one (as glyphs). A project only
+ * repeats when there are fewer projects than slots. Works for any number of projects ≥ 1.
  */
 export function buildGalleryTiles(projects: Project[], slots = 7): Tile[] {
   const pool = projects.filter((p) => p.galleryTile);
   if (pool.length === 0) return [];
-  const covers = pool.filter((p) => p.featured && p.cover);
-  const coverSlots = [4, 6, 0].slice(0, covers.length);
-  const glyphPool = [...pool.filter((p) => !covers.includes(p)), ...pool];
-  const tiles: Tile[] = [];
-  let g = 0;
-  for (let i = 0; i < slots; i++) {
-    const c = coverSlots.indexOf(i);
-    tiles.push(c >= 0 ? { kind: "cover", project: covers[c]! } : { kind: "glyph", project: glyphPool[g++ % glyphPool.length]! });
-  }
+  const order = [...pool.filter((p) => p.featured && p.cover), ...pool.filter((p) => !p.featured && p.cover), ...pool.filter((p) => !p.cover)];
+  const first = [4, 6, 0].filter((i) => i < slots);
+  const slotOrder = [...first, ...Array.from({ length: slots }, (_, i) => i).filter((i) => !first.includes(i))];
+  const tiles: Tile[] = new Array(slots);
+  slotOrder.forEach((slot, i) => {
+    const project = order[i % order.length]!;
+    tiles[slot] = { kind: project.cover ? "cover" : "glyph", project };
+  });
   return tiles;
 }
 

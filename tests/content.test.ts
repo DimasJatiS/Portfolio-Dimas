@@ -106,7 +106,18 @@ describe("buildGalleryTiles", () => {
     const tiles = buildGalleryTiles(projects);
     expect(tiles).toHaveLength(7);
     expect(tiles[4]).toMatchObject({ kind: "cover", project: { slug: "tbxpert" } });
-    expect(tiles.filter((t) => t.kind === "cover")).toHaveLength(3);
+  });
+  it("shows a cover on every tile when every project has one", () => {
+    expect(buildGalleryTiles(projects).every((t) => t.kind === "cover")).toBe(true);
+  });
+  it("never repeats a project while there are enough projects", () => {
+    const tiles = buildGalleryTiles(projects);
+    expect(new Set(tiles.map((t) => t.project.slug)).size).toBe(tiles.length);
+  });
+  it("only falls back to a glyph for a project without a cover", () => {
+    const noCover = projects.map((p, i) => (i === 0 ? { ...p, cover: undefined } : p));
+    const tiles = buildGalleryTiles(noCover);
+    expect(tiles.filter((t) => t.kind === "glyph").map((t) => t.project.slug)).toEqual([noCover[0]!.slug]);
   });
   it("still fills every slot with a single project, and is empty without projects", () => {
     expect(buildGalleryTiles(projects.slice(0, 1))).toHaveLength(7);
