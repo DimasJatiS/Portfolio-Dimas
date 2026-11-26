@@ -61,3 +61,15 @@ npm-debug.log*
 
 # local measurement output
 .lighthouse/
+
+# owner-only personal folders (CV drafts, internship notes)
+CV/
+intern/
+
+# design feedback screenshots (working notes, not part of the site)
+/Fix/
+
+# agent workspace (ledgers, review packages) and throwaway probes
+.superpowers/
+.pw-dev.config.ts
+scripts/.*.mjs
