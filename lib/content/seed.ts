@@ -38,7 +38,6 @@ function gallery(slug: MediaKey, title: string): RawImage[] {
 
 export const seed: RawContent = {
   settings: {
-    heroLabel: "LONG LIVE LEARNER",
     heroStatement: {
       en: "Software engineer turning curiosity into *crafted* products",
       id: "Software engineer yang meramu rasa ingin tahu menjadi produk yang *matang*",

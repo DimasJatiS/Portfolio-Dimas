@@ -207,9 +207,11 @@ export function Hero({ label, statement, cvUrl }: Props) {
           data-hero-text
           className="container-x relative flex flex-col items-center pt-[max(18svh,120px)] text-center"
         >
-          <p data-hero-reveal data-hero-item className="label text-accent">
-            {label}
-          </p>
+          {label && (
+            <p data-hero-reveal data-hero-item className="label text-accent">
+              {label}
+            </p>
+          )}
           <h1
             id="hero-name"
             data-hero-reveal

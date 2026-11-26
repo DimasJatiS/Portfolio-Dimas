@@ -53,6 +53,7 @@ describe("seed", () => {
     expect(starts).toEqual([...starts].sort().reverse());
     expect(content.projects[0]!.slug).toBe("chainfolio");
   });
+  it("has no hero label by default", () => expect(resolveContent(seed, "en").settings.heroLabel).toBe(""));
   it("gives every project a case study", () => expect(content.projects.every((p) => p.problem && p.decisions.length > 0)).toBe(true));
   it("only references media that exists", () => {
     for (const p of content.projects) for (const img of [p.cover, ...p.gallery].filter((i) => i !== undefined)) {

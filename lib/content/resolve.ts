@@ -65,7 +65,7 @@ function resolveProject(p: RawProject, locale: Locale): Project {
 export function resolveContent(raw: RawContent, locale: Locale): Content {
   const s = raw.settings;
   const settings: Settings = {
-    heroLabel: s.heroLabel || "LONG LIVE LEARNER",
+    heroLabel: s.heroLabel ?? "",
     heroStatement: pick(s.heroStatement, locale) ?? "",
     manifesto: pick(s.manifesto, locale) ?? "",
     email: s.email || undefined,
