@@ -21,7 +21,7 @@ export const activity = defineType({
     defineField({
       name: "glyph",
       type: "string",
-      options: { list: ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "generic"] },
+      options: { list: ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "console", "portfolio", "chicken", "bolt", "podium", "basketball", "generic"] },
       description: "Animated glyph shown when the activity has no photo. Empty: chosen by type.",
     }),
     defineField({ name: "featured", type: "boolean", initialValue: true, description: "Show on the Home timeline (newest 6)." }),

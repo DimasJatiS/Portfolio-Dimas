@@ -4,6 +4,7 @@ import id from "@/messages/id.json";
 import { buildGalleryTiles, mediaSet, pick, resolveContent, resolveImage, rowRatio } from "@/lib/content/resolve";
 import { seed } from "@/lib/content/seed";
 import { splitAccent, stripAccent } from "@/lib/content/text";
+import { GLYPHS } from "@/lib/content/types";
 import { existsSync } from "node:fs";
 
 const keys = (o: object, prefix = ""): string[] =>
@@ -91,6 +92,9 @@ describe("mediaSet", () => {
 });
 
 describe("glyphs", () => {
+  it("knows the new glyphs", () => {
+    for (const g of ["console", "portfolio", "chicken", "bolt", "podium", "basketball"]) expect(GLYPHS).toContain(g);
+  });
   it("uses the activity's own glyph, else one by type, and drops unknown ids", () => {
     const base = { title: { en: "A" }, startDate: "2026-01-01" };
     const { activities, projects } = resolveContent(

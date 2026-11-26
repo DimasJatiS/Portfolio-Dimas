@@ -2,7 +2,7 @@ import type { PortableTextBlock } from "next-sanity";
 
 /** Raw shapes = what GROQ returns (and what the seed mirrors). Field names follow Spek §5. */
 export type I18n<T = string> = { en?: T; id?: T };
-export const GLYPHS = ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "generic"] as const;
+export const GLYPHS = ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "console", "portfolio", "chicken", "bolt", "podium", "basketball", "generic"] as const;
 export type GlyphId = (typeof GLYPHS)[number];
 export type ActivityType = "education" | "organization" | "competition" | "certification" | "event";
 

@@ -207,6 +207,96 @@ export function Glyph({ glyph, variant = "line", animate = false, className = ""
         </>
       )}
 
+      {glyph === "console" && (
+        // Game console (Shardfall): the bronze A/B buttons blink in turn.
+        <>
+          <path data-part d="M34 22h28M40 14h16" {...faint} />
+          <path data-part d="M28 34h40c10 0 16 8 18 20l3 14c1 7-4 12-10 10l-12-8H29l-12 8c-6 2-11-3-10-10l3-14c2-12 8-20 18-20z" {...s} />
+          <path data-part d="M24 52h12M30 46v12" {...line} />
+          <g data-part>
+            {[
+              [64, 49],
+              [72, 56],
+            ].map(([cx, cy], i) => (
+              <circle key={cx} className="g-twinkle" style={{ animationDelay: `${i * 0.9}s` }} cx={cx} cy={cy} r="3.5" {...dot} />
+            ))}
+          </g>
+        </>
+      )}
+
+      {glyph === "portfolio" && (
+        // Crypto portfolio (ChainFolio): a wallet whose bronze value line keeps climbing; a chain link floats above.
+        <>
+          <g data-part>
+            <ellipse cx="62" cy="18" rx="8" ry="5" {...faint} />
+            <ellipse cx="74" cy="18" rx="8" ry="5" {...faint} />
+          </g>
+          <path data-part d="M20 34h54a6 6 0 0 1 6 6v34a6 6 0 0 1-6 6H20a6 6 0 0 1-6-6V40a6 6 0 0 1 6-6zM20 34l40-10 4 10" {...s} />
+          <path data-part d="M80 50H68a5 5 0 0 0 0 10h12" {...line} />
+          <g data-part>
+            <path className="g-draw" d="M22 72l12-10 10 4 14-14 10-6" pathLength={100} {...bronze} strokeWidth={2} />
+          </g>
+        </>
+      )}
+
+      {glyph === "chicken" && (
+        // Broiler (PIMNAS, Chromozorb feed additive): the bronze comb bobs; feed pellets below.
+        <>
+          <g data-part>
+            {[16, 24, 32].map((x, i) => (
+              <circle key={x} cx={x} cy={i % 2 ? 88 : 84} r="1.5" {...faint} />
+            ))}
+          </g>
+          <path data-part d="M42 40c-6-2-10-7-10-12a10 10 0 0 1 20 0c0 4-1 7-2 9 10-2 24 0 30 8l8-8v16c0 14-12 23-30 23S34 72 34 60c0-8 3-15 8-20z" {...s} />
+          <path data-part d="M32 27l-8 3 8 3M48 58c6 6 16 6 22-2M54 81v7M66 81v7M50 88h8M62 88h8" {...line} />
+          <circle data-part cx="39" cy="26" r="1.6" fill="currentColor" stroke="none" />
+          <g data-part>
+            <path className="g-swing" style={{ transformOrigin: "42px 18px" }} d="M35 19c-1-5 3-7 5-3 1-4 6-4 6 0 3-3 6 0 4 4" {...bronze} strokeWidth={2} />
+          </g>
+        </>
+      )}
+
+      {glyph === "bolt" && (
+        // Renewable energy (SRE): a bronze lightning bolt flickers over a solar panel.
+        <>
+          <path data-part d="M28 62l8 20M42 62l6 20M56 62l6 20M20 72h56" {...faint} />
+          <path data-part d="M14 62h56l12 20H26z" {...s} />
+          <g data-part>
+            <path className="g-flicker" d="M54 8L34 38h14l-6 20 22-30H50z" {...dot} />
+          </g>
+        </>
+      )}
+
+      {glyph === "podium" && (
+        // Competition podium (REVOGY): the bronze medal swings above first place.
+        <>
+          <path data-part d="M28 34c-5-6-4-14 2-19M68 34c5-6 4-14-2-19" {...faint} />
+          <path data-part d="M14 84V60h22v24M36 84V44h24v40M60 84V68h22v16M8 84h80" {...s} />
+          <path data-part d="M45 56l3-2v14" {...line} />
+          <g data-part>
+            <g className="g-swing" style={{ transformOrigin: "48px 10px" }}>
+              <path d="M42 10l6 12 6-12" {...bronze} />
+              <circle cx="48" cy="29" r="6" {...bronze} strokeWidth={2} />
+            </g>
+          </g>
+        </>
+      )}
+
+      {glyph === "basketball" && (
+        // Medical team at a basketball league (DBL): the bronze ball keeps bouncing.
+        <>
+          <path data-part d="M76 10v16M68 18h16" {...faint} />
+          <path data-part d="M12 84h64" {...s} />
+          <ellipse data-part cx="44" cy="84" rx="12" ry="2.5" {...faint} />
+          <g data-part>
+            <g className="g-rise">
+              <circle cx="44" cy="48" r="20" {...bronze} strokeWidth={2} />
+              <path d="M24 48h40M44 28v40M31 33c6 8 6 22 0 30M57 33c-6 8-6 22 0 30" {...bronze} />
+            </g>
+          </g>
+        </>
+      )}
+
       {glyph === "generic" && (
         // Summit: a peak with a bronze sun rising behind it.
         <>

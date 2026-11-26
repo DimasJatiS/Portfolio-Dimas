@@ -24,7 +24,7 @@ export const project = defineType({
       type: "string",
       group: "card",
       initialValue: "generic",
-      options: { list: ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "generic"] },
+      options: { list: ["tbxxpert", "cv", "chat", "flower", "grid", "shard", "chain", "trophy", "stopwatch", "pulse", "console", "portfolio", "chicken", "bolt", "podium", "basketball", "generic"] },
       description: "2D glyph (A3) shown in the gallery and on the card.",
     }),
     defineField({ name: "cover", type: "altImage", group: "card", description: "1440 px or wider. Shown grayscale; colour on hover. Without a cover the glyph is shown." }),
