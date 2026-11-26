@@ -124,12 +124,12 @@ export function Contact({ label, panel, settings, form }: Props) {
         </div>
       </div>
       <div className="relative">
-        {/* Background: the rest of the sun's reflection, behind the form's first row. Absolute, so
-            the form keeps its place right under the hairlines; it fades out above Company. */}
+        {/* Background: the rest of the sun's reflection, behind the form. Absolute, so the form
+            keeps its place right under the hairlines; the lines thin out and vanish on their own. */}
         <div
           aria-hidden
           ref={seaRef}
-          className="container-x pointer-events-none absolute inset-x-0 top-0 [mask-image:linear-gradient(to_bottom,black,transparent)]"
+          className="container-x pointer-events-none absolute inset-x-0 top-0"
         >
           <SunReflection sun={SUN_W} skip={SEA_TOP} />
         </div>

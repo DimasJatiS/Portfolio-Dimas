@@ -22,12 +22,12 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --gutter: clamp(16px, 4vw, 64px);
   --header-h: 72px;
-  /* Sun reflection (Contact): hairline band (96px) + down to just above the Company field. */
-  --refl-h: 136px;
+  /* Sun reflection (Contact): hairline band (96px) + behind the form, fading out by Message. */
+  --refl-h: 260px;
 }
 @media (min-width: 40rem) {
   :root {
-    --refl-h: 184px;
+    --refl-h: 340px;
   }
 }
 
@@ -478,9 +478,26 @@ html.theme-transition .theme-icon * {
     transition-duration: 0.01ms !important;
   }
 }
+:root[data-motion="still"] .refl-shine,
 :root[data-motion="still"] .glint,
 :root[data-motion="still"] .glyph * {
   animation: none !important;
+}
+
+/* Sun reflection: a light band sweeping left and right across the lines. */
+.refl-shine {
+  mask-image: linear-gradient(90deg, #0008 35%, #000 50%, #0008 65%);
+  mask-size: 200% 100%;
+  mask-position: 50% 0;
+  animation: refl-shine 7s ease-in-out infinite alternate;
+}
+@keyframes refl-shine {
+  from {
+    mask-position: 0% 0;
+  }
+  to {
+    mask-position: 100% 0;
+  }
 }
 
 .hero[data-offscreen] .glint {
