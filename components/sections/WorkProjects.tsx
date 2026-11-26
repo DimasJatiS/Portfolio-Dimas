@@ -8,6 +8,9 @@ import { Link } from "@/i18n/navigation";
 import type { Project } from "@/lib/content/types";
 import { gsap, getTier, isMobile, SCRUB, useGSAP } from "@/lib/motion/gsap";
 
+// Card actions: house pills, enlarged to a 44 px target with larger, heavier text.
+const BTN = "pill min-h-11 px-5 text-base font-semibold sm:text-lg";
+const BTN_GHOST = `${BTN} pill-ghost hover:border-accent hover:text-accent`;
 
 function ExternalLinks({ project }: { project: Project }) {
   const t = useTranslations("work");
@@ -15,12 +18,12 @@ function ExternalLinks({ project }: { project: Project }) {
   return (
     <>
       {project.liveUrl && (
-        <a href={project.liveUrl} target="_blank" rel="noreferrer" className="link-underline">
+        <a href={project.liveUrl} target="_blank" rel="noreferrer" className={BTN_GHOST}>
           {t("live")} ↗<span className="sr-only"> ({a11y("external")})</span>
         </a>
       )}
       {project.repoUrl && (
-        <a href={project.repoUrl} target="_blank" rel="noreferrer" className="link-underline">
+        <a href={project.repoUrl} target="_blank" rel="noreferrer" className={BTN_GHOST}>
           {t("source")} ↗<span className="sr-only"> ({a11y("external")})</span>
         </a>
       )}
@@ -60,20 +63,25 @@ export function FeaturedCards({ projects }: { projects: Project[] }) {
             </header>
             {p.cover && (
               // Monochrome by default; the colour version fades in on hover (PRD 13.3).
-              <div className="group media relative mt-6 aspect-video bg-[color-mix(in_srgb,var(--fg)_7%,var(--surface))] sm:mt-8">
+              // Capped at 38svh so the whole pinned card (title → actions) fits a 720 px viewport.
+              <div className="group media relative mt-6 aspect-video max-h-[38svh] w-full bg-[color-mix(in_srgb,var(--fg)_7%,var(--surface))] sm:mt-8 sm:aspect-[21/9]">
                 <Image src={p.cover.gray} alt={p.cover.alt} fill sizes="(min-width: 1240px) 1100px, 92vw" className="object-cover" />
                 {p.cover.gray !== p.cover.src && (
                   <Image src={p.cover.src} alt="" aria-hidden fill sizes="(min-width: 1240px) 1100px, 92vw" className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                 )}
               </div>
             )}
-            <p className="mt-6 max-w-[60ch] text-muted">{p.summary}</p>
-            <p className="label mt-4 text-muted">{[p.role, p.year, p.stack.join(" · ")].filter(Boolean).join("  ·  ")}</p>
-            <div className="label mt-6 flex flex-wrap gap-6">
-              <Link href={`/work/${p.slug}`} className="link-underline text-fg">
-                {t("readCase")} →
-              </Link>
-              <ExternalLinks project={p} />
+            <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
+              <div>
+                <p className="max-w-[60ch] text-muted">{p.summary}</p>
+                <p className="label mt-3 text-muted">{[p.role, p.year, p.stack.join(" · ")].filter(Boolean).join("  ·  ")}</p>
+              </div>
+              <div className="flex flex-wrap gap-3 lg:shrink-0">
+                <Link href={`/work/${p.slug}`} className={`${BTN} pill-accent`}>
+                  {t("readCase")} →
+                </Link>
+                <ExternalLinks project={p} />
+              </div>
             </div>
           </article>
         </li>

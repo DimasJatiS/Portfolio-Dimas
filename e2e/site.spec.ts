@@ -7,7 +7,7 @@ test("home renders server-side text in English and Indonesian", async ({ page })
   await page.goto("/?motion=still");
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Dimas");
-  await expect(page.getByText("LONG LIVE LEARNER")).toBeVisible();
+  await expect(page.getByText("LONG LIVE LEARNER")).toHaveCount(0);
   for (const id of ["about", "work", "skills", "contact"]) await expect(page.locator(`#${id}`)).toBeAttached();
 
   await page.goto("/id?motion=still");
@@ -84,3 +84,20 @@ for (const theme of ["night", "day"] as const) {
     expect(serious.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).slice(0, 3).join(" | ")}`)).toEqual([]);
   });
 }
+
+test("featured cards keep their actions inside the viewport while pinned", async ({ page }) => {
+  await page.goto("/?motion=still");
+  const cards = page.locator("#work article[data-card]");
+  const n = await cards.count();
+  expect(n).toBeGreaterThan(0);
+  for (let i = 0; i < n; i++) {
+    const card = cards.nth(i);
+    await card.locator("xpath=..").evaluate((li) => li.scrollIntoView({ block: "start" }));
+    await page.waitForTimeout(300);
+    const read = card.getByRole("link", { name: /Read case study/ });
+    const box = (await read.boundingBox())!;
+    const vh = page.viewportSize()!.height;
+    expect(box.y + box.height, `card ${i} actions`).toBeLessThanOrEqual(vh);
+    expect(box.height).toBeGreaterThanOrEqual(44);
+  }
+});
