@@ -32,7 +32,7 @@ export function Contact({ label, panel, settings, form }: Props) {
       const sun = ref.current!.querySelector("[data-sun]");
       const full = tier === "full";
       // The reflection follows the sun: it unrolls down from the horizon as the disc rises, and its
-      // lower part (above the form) continues as it scrolls in. Clip only, so the halves stay aligned.
+      // lower part (behind the form) continues as it scrolls in. Clip only, so the halves stay aligned.
       gsap.fromTo(
         ref.current!.querySelector("[data-reflect-top]"),
         { clipPath: "inset(0 0 100% 0)" },
@@ -124,12 +124,12 @@ export function Contact({ label, panel, settings, form }: Props) {
         </div>
       </div>
       <div className="relative">
-        {/* The rest of the sun's reflection, below the hairline band; the form starts after it so
-            no text sits on bronze. Empty (0px) when the whole reflection fits in the band. */}
+        {/* Background: the rest of the sun's reflection, behind the form's first row. Absolute, so
+            the form keeps its place right under the hairlines; it fades out above Company. */}
         <div
           aria-hidden
           ref={seaRef}
-          className="container-x pointer-events-none"
+          className="container-x pointer-events-none absolute inset-x-0 top-0 [mask-image:linear-gradient(to_bottom,black,transparent)]"
         >
           <SunReflection sun={SUN_W} skip={SEA_TOP} />
         </div>

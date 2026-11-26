@@ -1,26 +1,20 @@
 /**
- * The sun's reflection on the sea (after the sunset sketches in Sunsets/): a solid column of
- * thick, overlapping horizontal bands right under the disc, as wide as the sun at the horizon,
- * with wavy broken edges, narrowing towards the viewer and ending short (0.3 sun widths).
- * 100 viewBox units = the sun's width. `skip` cuts off the top and `max` caps the height, so one
- * shape can be split across two boxes (hairline band, then Contact) and still line up.
+ * The sun's reflection on the sea (after the sunset sketches in Sunsets/): thin, unbroken
+ * horizontal lines stacked under the disc, as wide as the sun at the horizon, with wavy edges,
+ * narrowing towards the viewer. It is `--refl-h` tall (globals.css): it ends just above the
+ * contact form's Company field. `skip` cuts off the top and `max` caps the height, so one shape
+ * splits across two boxes (hairline band, then behind the form) and still lines up.
  */
-const BANDS: [number, number][] = [
-  [3, 97],
-  [10, 92],
-  [5, 86],
-  [16, 93],
-  [12, 80],
-  [24, 87],
-  [20, 72],
-  [32, 76],
-  [38, 62],
-];
-const T = 4; // band thickness; bands step by 0.8T, so neighbours overlap into one shape
-const H = T + (BANDS.length - 1) * T * 0.8;
-
-/** Height of the whole reflection for a given sun width (a CSS length). */
-export const reflectionHeight = (sun: string) => `calc(${sun} * ${H / 100})`;
+const N = 22;
+const LINES = Array.from({ length: N }, (_, i) => {
+  const t = i / (N - 1);
+  const half = 50 * (1 - 0.62 * t); // 100 units = the sun's width
+  return {
+    y: ((i + 0.5) / N) * 100,
+    x1: +(50 - half + 5 * Math.sin(i * 2.3) + 2).toFixed(1),
+    x2: +(50 + half + 5 * Math.sin(i * 1.7 + 1) - 2).toFixed(1),
+  };
+});
 
 export function SunReflection({
   sun,
@@ -37,22 +31,25 @@ export function SunReflection({
       className="relative mx-auto overflow-hidden"
       style={{
         width: sun,
-        height: `max(0px, min(${max}, calc(${reflectionHeight(sun)} - ${skip})))`,
+        height: `max(0px, min(${max}, calc(var(--refl-h) - ${skip})))`,
       }}
     >
+      {/* Stretched to --refl-h; strokes keep their px width. */}
       <svg
-        viewBox={`0 0 100 ${H}`}
-        className="absolute left-0 w-full text-accent"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        className="absolute left-0 h-[var(--refl-h)] w-full text-accent"
         style={{ top: `calc(-1 * ${skip})` }}
       >
-        <g stroke="currentColor" strokeWidth={T} strokeLinecap="round">
-          {BANDS.map(([x1, x2], i) => (
+        <g stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
+          {LINES.map((l, i) => (
             <line
               key={i}
-              x1={x1}
-              x2={x2}
-              y1={T / 2 + i * T * 0.8}
-              y2={T / 2 + i * T * 0.8}
+              x1={l.x1}
+              x2={l.x2}
+              y1={l.y}
+              y2={l.y}
+              vectorEffect="non-scaling-stroke"
             />
           ))}
         </g>
