@@ -9,7 +9,7 @@ import { sendMessage } from "./actions";
 import type { ContactState } from "./schema";
 
 const field =
-  "mt-2 w-full rounded-xl border border-line bg-transparent px-4 py-3 text-fg outline-none transition-colors focus:border-accent aria-[invalid=true]:border-accent";
+  "mt-2 w-full rounded-xl border-2 border-fg/35 bg-transparent px-4 py-3 text-fg outline-none transition-colors focus:border-accent aria-[invalid=true]:border-accent";
 
 /** F-08. Always parallax speed 1 (never moves while being filled in). */
 export function ContactForm({ siteKey }: { siteKey: string }) {
