@@ -15,10 +15,10 @@ export function pick<T>(value: I18n<T> | undefined, locale: Locale): T | undefin
 
 const isSanityAsset = (url: string) => url.startsWith("https://cdn.sanity.io/");
 
-export function resolveImage(img: RawImage | undefined, locale: Locale, fallbackAlt: string): Img | undefined {
+export function resolveImage(img: RawImage | undefined, locale: Locale, fallbackAlt: string, maxWidth = 1600): Img | undefined {
   if (!img?.url) return undefined;
   const sanity = isSanityAsset(img.url);
-  const sized = (extra: string) => (sanity ? `${img.url}?w=1600&fit=max&auto=format${extra}` : img.url);
+  const sized = (extra: string) => (sanity ? `${img.url}?w=${maxWidth}&fit=max&auto=format${extra}` : img.url);
   return {
     src: sized(""),
     gray: img.grayUrl ?? (sanity ? sized("&sat=-100") : img.url),
@@ -68,7 +68,7 @@ export function resolveContent(raw: RawContent, locale: Locale): Content {
     heroLabel: s.heroLabel ?? "",
     heroStatement: pick(s.heroStatement, locale) ?? "",
     manifesto: pick(s.manifesto, locale) ?? "",
-    portrait: resolveImage(s.portrait, locale, "Dimas Jati Satria"),
+    portrait: resolveImage(s.portrait, locale, "Dimas Jati Satria", 1280),
     email: s.email || undefined,
     linkedin: s.linkedin || undefined,
     github: s.github || undefined,

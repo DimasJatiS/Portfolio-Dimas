@@ -56,12 +56,12 @@ export function About({ label, manifesto, portrait }: Props) {
             )}
           </p>
         </div>
-        <div data-portrait data-speed="0.7" className="group relative order-first aspect-[4/5] w-full max-w-[420px] lg:order-none lg:col-span-4 lg:justify-self-end">
+        <div data-portrait data-speed="0.7" style={portrait ? { aspectRatio: `${portrait.width} / ${portrait.height}` } : undefined} className="group relative order-first aspect-[4/5] w-full max-w-[420px] lg:order-none lg:col-span-4 lg:justify-self-end">
           <div className="media relative size-full border border-line bg-surface">
             <div data-face className="absolute inset-0 grid place-items-center">
               {portrait ? (
                 <div className="absolute inset-0">
-                  <MediaFrame images={[portrait]} sizes="(min-width: 1024px) 420px, 100vw" hover />
+                  <MediaFrame images={[portrait]} sizes="(min-width: 1024px) 420px, 100vw" quality={90} hover />
                 </div>
               ) : (
                 <span className="font-serif text-[clamp(72px,8.4vw,136px)] leading-none font-bold tracking-[-0.02em]">DJS</span>
