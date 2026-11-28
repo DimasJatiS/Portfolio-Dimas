@@ -5,7 +5,7 @@ const image = `{ "url": asset->url, "width": asset->metadata.dimensions.width, "
 /** One query for the whole site: content is small, and one cache tag keeps revalidation simple. */
 export const contentQuery = defineQuery(`{
   "settings": *[_type == "siteSettings"][0]{
-    heroLabel, heroStatement, manifesto,
+    heroLabel, heroStatement, manifesto, "portrait": portrait${image},
     email, linkedin, github, repoUrl, "cvUrl": cv.asset->url
   },
   "projects": *[_type == "project" && defined(slug.current)] | order(order asc){

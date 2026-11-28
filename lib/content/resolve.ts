@@ -68,6 +68,7 @@ export function resolveContent(raw: RawContent, locale: Locale): Content {
     heroLabel: s.heroLabel ?? "",
     heroStatement: pick(s.heroStatement, locale) ?? "",
     manifesto: pick(s.manifesto, locale) ?? "",
+    portrait: resolveImage(s.portrait, locale, "Dimas Jati Satria"),
     email: s.email || undefined,
     linkedin: s.linkedin || undefined,
     github: s.github || undefined,

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { Resend } from "resend";
 import { contactConfigured, env } from "@/lib/config/env";
+import { buildContactEmail } from "./email";
 import { contactSchema, createRateLimiter, type ContactState, type FieldErrors } from "./schema";
 
 const allow = createRateLimiter(5, 10 * 60 * 1000);
@@ -35,14 +36,27 @@ export async function sendMessage(_prev: ContactState, form: FormData): Promise<
   const token = String(form.get("cf-turnstile-response") ?? "");
   if (!token || !(await verifyTurnstile(token, ip))) return { status: "invalid", errors: { captcha: "captcha" } };
 
-  const { name, email, company, message } = parsed.data;
+  // Vercel URL-encodes geo headers; absent locally, so fall back to "unknown".
+  const geo = (k: string) => {
+    const v = h.get(`x-vercel-ip-${k}`) ?? "unknown";
+    try { return decodeURIComponent(v); } catch { return v; }
+  };
+  const mail = buildContactEmail(parsed.data, {
+    ip,
+    city: geo("city"),
+    region: geo("country-region"),
+    country: geo("country"),
+    timezone: geo("timezone"),
+    userAgent: h.get("user-agent") ?? "",
+    language: h.get("accept-language")?.split(",")[0] ?? "",
+    sentAt: new Date(),
+  });
   try {
     const { error } = await new Resend(env.RESEND_API_KEY).emails.send({
       from: env.CONTACT_FROM_EMAIL!,
       to: env.CONTACT_TO_EMAIL!,
-      replyTo: email,
-      subject: `Portfolio message from ${name}${company ? ` (${company})` : ""}`,
-      text: `${message}\n\n- ${name} <${email}>${company ? `\n${company}` : ""}`,
+      replyTo: parsed.data.email,
+      ...mail,
     });
     if (error) throw new Error(error.message);
     return { status: "success" };

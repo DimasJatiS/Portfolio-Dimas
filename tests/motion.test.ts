@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parallaxDistance, zoomScales } from "@/lib/motion/parallax";
+import { kineticPull, parallaxDistance, zoomScales } from "@/lib/motion/parallax";
 import { detectTier } from "@/lib/motion/tier";
 
 const desktop = { reducedMotion: false, coarsePointer: false, cores: 8, memory: 8 };
@@ -32,5 +32,14 @@ describe("zoomScales (M-13)", () => {
     const s = zoomScales(7, 4, 3.2);
     expect(s[4]).toBe(3.2);
     s.forEach((v, i) => i !== 4 && expect(v).toBeGreaterThan(3.2));
+  });
+});
+
+describe("kineticPull", () => {
+  it("is 1 under the pointer, 0 at the radius and beyond, and falls off in between", () => {
+    expect(kineticPull(0, 160)).toBe(1);
+    expect(kineticPull(160, 160)).toBe(0);
+    expect(kineticPull(400, 160)).toBe(0);
+    expect(kineticPull(40, 160)).toBeGreaterThan(kineticPull(120, 160));
   });
 });

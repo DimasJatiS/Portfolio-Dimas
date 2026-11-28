@@ -4,13 +4,13 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { Accent } from "@/components/ui/Accent";
+import { KineticText } from "@/components/ui/kinetic-text";
 import { heroState } from "@/lib/motion/heroState";
 import {
   gsap,
   getTier,
   SCRUB,
   ScrollTrigger,
-  SplitText,
   useGSAP,
 } from "@/lib/motion/gsap";
 
@@ -59,11 +59,7 @@ export function Hero({ label, statement, cvUrl }: Props) {
       if (tier !== "still") {
         document.fonts.ready.then(() => {
           gsap.set(q("[data-hero-reveal]"), { opacity: 1, animation: "none" });
-          const split = SplitText.create(q("[data-hero-name]"), {
-            type: "chars",
-            aria: "auto",
-          });
-          gsap.from(split.chars, {
+          gsap.from(q("[data-hero-name] [data-char]"), {
             opacity: 0,
             filter: "blur(12px)",
             yPercent: 20,
@@ -216,10 +212,10 @@ export function Hero({ label, statement, cvUrl }: Props) {
             id="hero-name"
             data-hero-reveal
             data-hero-name
-            className="display mt-5 text-[clamp(44px,8.6vw,140px)] tracking-[-0.01em] text-balance"
+            className="display font-[family-name:var(--font-playfair)] mt-5 text-[clamp(44px,8.6vw,140px)] tracking-[-0.01em] text-balance"
           >
-            <span className="block sm:inline">Dimas</span>{" "}
-            <span className="block sm:inline">Jati Satria</span>
+            <KineticText className="block sm:inline">Dimas Jati</KineticText>{" "}
+            <KineticText className="block sm:inline">Satria</KineticText>
           </h1>
           <p
             data-hero-reveal

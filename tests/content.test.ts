@@ -41,6 +41,11 @@ describe("resolveImage", () => {
     expect(img.gray).toContain("sat=-100");
     expect(img.alt).toBe("x");
   });
+  it("resolves the settings portrait, absent when none is uploaded", () => {
+    const portrait = { url: "https://cdn.sanity.io/images/p/d/me.jpg", width: 1600, height: 2000 };
+    expect(resolveContent({ ...seed, settings: { ...seed.settings, portrait } }, "en").settings.portrait?.alt).toBe("Dimas Jati Satria");
+    expect(resolveContent(seed, "en").settings.portrait).toBeUndefined();
+  });
 });
 
 describe("seed", () => {

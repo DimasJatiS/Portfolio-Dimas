@@ -2,13 +2,15 @@
 
 import { useRef } from "react";
 import { Contour } from "@/components/artwork/Contour";
+import { MediaFrame } from "@/components/ui/MediaFrame";
 import { Section } from "@/components/ui/Section";
+import type { Img } from "@/lib/content/types";
 import { splitAccent } from "@/lib/content/text";
 import { gsap, getTier, SCRUB, useGSAP } from "@/lib/motion/gsap";
 
-type Props = { label: string; manifesto: string };
+type Props = { label: string; manifesto: string; portrait?: Img };
 
-export function About({ label, manifesto }: Props) {
+export function About({ label, manifesto, portrait }: Props) {
   const ref = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -54,10 +56,16 @@ export function About({ label, manifesto }: Props) {
             )}
           </p>
         </div>
-        <div data-portrait data-speed="0.7" className="relative order-first aspect-[4/5] w-full max-w-[420px] lg:order-none lg:col-span-4 lg:justify-self-end">
+        <div data-portrait data-speed="0.7" className="group relative order-first aspect-[4/5] w-full max-w-[420px] lg:order-none lg:col-span-4 lg:justify-self-end">
           <div className="media relative size-full border border-line bg-surface">
             <div data-face className="absolute inset-0 grid place-items-center">
-              <span className="font-serif text-[clamp(72px,8.4vw,136px)] leading-none font-bold tracking-[-0.02em]">DJS</span>
+              {portrait ? (
+                <div className="absolute inset-0">
+                  <MediaFrame images={[portrait]} sizes="(min-width: 1024px) 420px, 100vw" hover />
+                </div>
+              ) : (
+                <span className="font-serif text-[clamp(72px,8.4vw,136px)] leading-none font-bold tracking-[-0.02em]">DJS</span>
+              )}
               <span className="label absolute bottom-4 left-4 text-muted">Dimas Jati Satria</span>
             </div>
             <div data-noise aria-hidden className="absolute inset-0 bg-[url(/grain.png)] bg-[length:144px] opacity-0 in-data-[motion=still]:hidden" />

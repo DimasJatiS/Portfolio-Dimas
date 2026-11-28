@@ -46,7 +46,7 @@ export default async function Home() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(personJsonLd(settings, meta("description"))) }} />
       <Hero label={settings.heroLabel} statement={settings.heroStatement} cvUrl={settings.cvUrl} />
-      <About label={t("about")} manifesto={settings.manifesto} />
+      <About label={t("about")} manifesto={settings.manifesto} portrait={settings.portrait} />
       <Section id="work" tone="base" panel label={t("work")}>
         <WorkGallery tiles={tiles} />
         <FeaturedCards projects={featured} />

@@ -8,3 +8,9 @@ export function zoomScales(count: number, centre: number, fillScale: number) {
   const spread = [5, 7, 6, 9, 8, 5.5, 7.5, 6.5, 8.5];
   return Array.from({ length: count }, (_, i) => (i === centre ? fillScale : Math.max(fillScale + 1, spread[i % spread.length]!)));
 }
+
+/** Kinetic text: how strongly a letter `distance` px from the pointer is pulled, 1 under it, 0 at `radius` and beyond (smooth falloff). */
+export function kineticPull(distance: number, radius: number) {
+  const t = Math.max(0, 1 - distance / radius);
+  return t * t * (3 - 2 * t);
+}

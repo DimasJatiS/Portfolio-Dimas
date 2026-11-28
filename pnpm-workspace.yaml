@@ -11,3 +11,8 @@ minimumReleaseAgeExclude:
   - next-sanity@13.5.1
   - resend@6.39.0
   - vitest@5.1.1
+# Security patches for transitive deps of @sanity/cli (pnpm audit, 2026-11-28); drop once sanity ships them.
+overrides:
+  "js-yaml@>=3 <3.15.2": "3.15.2"
+  "smol-toml@<1.9.1": "1.9.1"
+  "minimatch@>=7 <11.0.1": "^11.0.1"

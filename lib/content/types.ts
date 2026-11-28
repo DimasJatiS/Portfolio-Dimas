@@ -19,6 +19,7 @@ export type RawSettings = {
   heroLabel?: string;
   heroStatement?: I18n;
   manifesto?: I18n;
+  portrait?: RawImage;
   email?: string;
   linkedin?: string;
   github?: string;
@@ -84,6 +85,7 @@ export type Settings = {
   heroLabel: string;
   heroStatement: string;
   manifesto: string;
+  portrait?: Img;
   email?: string;
   linkedin?: string;
   github?: string;
