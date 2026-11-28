@@ -212,10 +212,10 @@ export function Hero({ label, statement, cvUrl }: Props) {
             id="hero-name"
             data-hero-reveal
             data-hero-name
-            className="display font-[family-name:var(--font-playfair)] mt-5 text-[clamp(44px,8.6vw,140px)] tracking-[-0.01em] text-balance"
+            className="display font-[family-name:var(--font-playfair)] mt-5 max-w-[6em] text-[clamp(40px,18vw,80px)] tracking-[-0.01em] text-wrap sm:max-w-none sm:text-[clamp(44px,8.6vw,140px)] sm:whitespace-nowrap"
           >
-            <KineticText className="block sm:inline">Dimas Jati</KineticText>{" "}
-            <KineticText className="block sm:inline">Satria</KineticText>
+            {/* Phones: 6em fits "Dimas Jati" (~4.4em) but not the whole name, so "Satria" drops to line 2. sm+ (iPad up): one line. */}
+            <KineticText>Dimas Jati Satria</KineticText>
           </h1>
           <p
             data-hero-reveal
